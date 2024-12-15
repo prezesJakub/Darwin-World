@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            minHeight="550.0" minWidth="850.0"
+            fx:controller="presenters.ConfigurationPresenter">
+    <top>
+        <VBox spacing="5" alignment="CENTER" style="-fx-padding: 5;">
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Szerokość mapy: " styleClass="labelStyle"/>
+                <Spinner fx:id="mapWidthField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Wysokość mapy: " styleClass="labelStyle"/>
+                <Spinner fx:id="mapHeightField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Ilość roślin: " styleClass="labelStyle"/>
+                <Spinner fx:id="plantsAmountField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Ilość zwierząt: " styleClass="labelStyle"/>
+                <Spinner fx:id="animalsAmountField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Dzienny wzrost roślin: " styleClass="labelStyle"/>
+                <Spinner fx:id="dailyPlantsGrowField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+        </VBox>
+    </top>
+    <bottom>
+        <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
+            <Button fx:id="startButton" text="Start Simulation" onAction="#onSimulationStartClicked"/>
+        </VBox>
+    </bottom>
+</BorderPane>

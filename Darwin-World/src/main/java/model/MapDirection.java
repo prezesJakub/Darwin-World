@@ -28,6 +28,19 @@ public enum MapDirection {
             case NORTH_WEST -> 7;
         };
     }
+    public static MapDirection fromInt(int value) {
+        return switch(value) {
+            case 0 -> NORTH;
+            case 1 -> NORTH_EAST;
+            case 2 -> EAST;
+            case 3 -> SOUTH_EAST;
+            case 4 -> SOUTH;
+            case 5 -> SOUTH_WEST;
+            case 6 -> WEST;
+            case 7 -> NORTH_WEST;
+            default -> throw new IllegalArgumentException("Int to MapDirection illegal value: " + value);
+        };
+    }
     public Vector2d toUnitVector() {
         return switch(this) {
             case NORTH -> new Vector2d(0, 1);

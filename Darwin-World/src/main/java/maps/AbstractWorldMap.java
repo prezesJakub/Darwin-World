@@ -1,5 +1,6 @@
 package maps;
 
+import information.MapSpecification;
 import model.MapChangeListener;
 import model.MapDirection;
 import model.MapElement;
@@ -12,6 +13,11 @@ public class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, Animal> animals = new HashMap<>();
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
+    private final MapSpecification mapSpec;
+
+    public AbstractWorldMap(MapSpecification mapSpec) {
+        this.mapSpec = mapSpec;
+    }
 
     @Override
     public void place(Animal animal) {
@@ -70,5 +76,15 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public boolean canMoveTo(Vector2d position) {
         return true; //do zrobienia
+    }
+
+    @Override
+    public int getWidth() {
+        return this.mapSpec.mapWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return this.mapSpec.mapHeight();
     }
 }

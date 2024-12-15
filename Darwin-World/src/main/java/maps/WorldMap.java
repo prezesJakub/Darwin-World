@@ -19,4 +19,6 @@ public interface WorldMap {
     UUID getId();
     List<MapElement> getElements();
     boolean canMoveTo(Vector2d position);
+    int getWidth();
+    int getHeight();
 }
