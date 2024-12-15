@@ -87,4 +87,19 @@ public class AbstractWorldMap implements WorldMap {
     public int getHeight() {
         return this.mapSpec.mapHeight();
     }
+
+    @Override
+    public int getStartingPlantsAmount() {
+        return this.mapSpec.startingPlantsAmount();
+    }
+
+    @Override
+    public int getStartingAnimalsAmount() {
+        return this.mapSpec.startingAnimalsAmount();
+    }
+
+    @Override
+    public int getDailyPlantsGrowth() {
+        return this.mapSpec.dailyPlantsGrowth();
+    }
 }

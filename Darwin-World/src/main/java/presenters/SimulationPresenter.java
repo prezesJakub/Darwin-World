@@ -31,9 +31,13 @@ public class SimulationPresenter implements MapChangeListener {
     public void setWorldMap(WorldMap map) {
         this.map = map;
         map.addObserver(this);
+        configureScreen();
+    }
+
+    private void configureScreen() {
         mapWidth=map.getWidth();
         mapHeight=map.getHeight();
-        cellSize = Math.round(Math.min(MAP_WIDTH/mapWidth, MAP_HEIGHT/mapHeight));
+        cellSize = Math.round(Math.min(MAP_WIDTH/(mapWidth+1), MAP_HEIGHT/(mapHeight+1)));
         Platform.runLater(() -> drawMap());
     }
 

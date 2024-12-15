@@ -21,4 +21,7 @@ public interface WorldMap {
     boolean canMoveTo(Vector2d position);
     int getWidth();
     int getHeight();
+    int getStartingPlantsAmount();
+    int getStartingAnimalsAmount();
+    int getDailyPlantsGrowth();
 }
