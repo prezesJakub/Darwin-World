@@ -11,7 +11,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import maps.WorldMap;
 import model.MapChangeListener;
+import model.MapElement;
+import model.Vector2d;
+import objects.Animal;
+import simulation.Simulation;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,6 +28,8 @@ public class SimulationPresenter implements MapChangeListener {
     private int mapWidth;
     private int mapHeight;
     private int cellSize;
+    private Label[][] cells;
+    private Simulation simulation;
 
     @FXML
     private GridPane mapGrid;
@@ -31,9 +39,14 @@ public class SimulationPresenter implements MapChangeListener {
     public void setWorldMap(WorldMap map) {
         this.map = map;
         map.addObserver(this);
+        configureScreen();
+    }
+
+    private void configureScreen() {
         mapWidth=map.getWidth();
         mapHeight=map.getHeight();
-        cellSize = Math.round(Math.min(MAP_WIDTH/mapWidth, MAP_HEIGHT/mapHeight));
+        cellSize = Math.round(Math.min(MAP_WIDTH/(mapWidth+1), MAP_HEIGHT/(mapHeight+1)));
+        cells = new Label[mapWidth][mapHeight];
         Platform.runLater(() -> drawMap());
     }
 
@@ -41,6 +54,13 @@ public class SimulationPresenter implements MapChangeListener {
         clearGrid();
         headerLabel();
         generateTable();
+        addAnimals();
+    }
+
+    private void clearGrid() {
+        mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
+        mapGrid.getColumnConstraints().clear();
+        mapGrid.getRowConstraints().clear();
     }
 
     private void headerLabel() {
@@ -66,10 +86,24 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    private void clearGrid() {
-        mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
-        mapGrid.getColumnConstraints().clear();
-        mapGrid.getRowConstraints().clear();
+    private void addAnimals() {
+        System.out.println(map.getElementPositions());
+        List<Vector2d> elementPositions = map.getElementPositions();
+        for(Vector2d pos : elementPositions) {
+            int x = pos.getX();
+            int y = pos.getY();
+            mapGrid.add(new Label(map.getElement(pos).toString()), x+1, y+1);
+            mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
+        }
+        List<Animal> animaltest = map.getAnimals();
+        for(Animal element : animaltest) {
+            int[] genes = element.getGenome().getGenes();
+            System.out.println(Arrays.toString(genes));
+        }
+    }
+
+    public void setSimulation(Simulation simulation) {
+        this.simulation = simulation;
     }
 
     @Override

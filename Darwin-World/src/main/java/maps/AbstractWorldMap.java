@@ -1,5 +1,6 @@
 package maps;
 
+import information.AnimalSpecification;
 import information.MapSpecification;
 import model.MapChangeListener;
 import model.MapDirection;
@@ -19,6 +20,16 @@ public class AbstractWorldMap implements WorldMap {
         this.mapSpec = mapSpec;
     }
 
+    public void generateAnimals(int numberOfAnimals, AnimalSpecification animalSpec) {
+        for(int i=0; i<numberOfAnimals; i++) {
+            Vector2d position = new Vector2d((int) (Math.random() * (mapSpec.mapWidth()-1)),
+                    (int) (Math.random() * (mapSpec.mapHeight()-1)));
+            Animal animal = new Animal(position, animalSpec);
+            animals.put(position, animal);
+        }
+        mapChanged("Generated animals");
+    }
+
     @Override
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
@@ -32,8 +43,16 @@ public class AbstractWorldMap implements WorldMap {
     public void move(Animal animal, MapDirection direction) {
         Vector2d oldPosition = animal.getPosition();
         if(getElement(oldPosition) == animal) {
-            // do zrobienia
+            //to do
         }
+    }
+
+    public void moveAnimals() {
+        Map<Vector2d, Animal> newAnimalMap = new HashMap<>();
+
+        animals.values().forEach(Animal -> {
+            //to do
+        });
     }
 
     @Override
@@ -68,14 +87,26 @@ public class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public List<MapElement> getElements() {
-        List<MapElement> elements = new ArrayList<>(animals.values());
+    public List<Animal> getAnimals() {
+        List<Animal> elements = new ArrayList<>(animals.values());
         return elements;
     }
 
     @Override
+    public List<Vector2d> getElementPositions() {
+        List<Vector2d> elementPositions = new ArrayList<>(animals.keySet());
+        return elementPositions;
+    }
+
+
+    @Override
     public boolean canMoveTo(Vector2d position) {
         return true; //do zrobienia
+    }
+
+    @Override
+    public MapSpecification getMapSpec() {
+        return this.mapSpec;
     }
 
     @Override
@@ -86,5 +117,20 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public int getHeight() {
         return this.mapSpec.mapHeight();
+    }
+
+    @Override
+    public int getStartingPlantsAmount() {
+        return this.mapSpec.startingPlantsAmount();
+    }
+
+    @Override
+    public int getStartingAnimalsAmount() {
+        return this.mapSpec.startingAnimalsAmount();
+    }
+
+    @Override
+    public int getDailyPlantsGrowth() {
+        return this.mapSpec.dailyPlantsGrowth();
     }
 }

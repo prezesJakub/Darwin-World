@@ -32,6 +32,34 @@
                 <Label text="Dzienny wzrost roślin: " styleClass="labelStyle"/>
                 <Spinner fx:id="dailyPlantsGrowField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
             </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Początkowa energia: " styleClass="labelStyle"/>
+                <Spinner fx:id="startingEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Zysk energii z jedzenia: " styleClass="labelStyle"/>
+                <Spinner fx:id="energyFromEatingField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Minimalna energia do rozmnażania: " styleClass="labelStyle"/>
+                <Spinner fx:id="reproductionMinEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Koszt rozmnażania: " styleClass="labelStyle"/>
+                <Spinner fx:id="reproductionCostField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Minimalna liczba mutacji: " styleClass="labelStyle"/>
+                <Spinner fx:id="minMutationsField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Maksymalna liczba mutacji: " styleClass="labelStyle"/>
+                <Spinner fx:id="maxMutationsField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Długość genomu: " styleClass="labelStyle"/>
+                <Spinner fx:id="genomeLengthField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
         </VBox>
     </top>
     <bottom>
