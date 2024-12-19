@@ -1,9 +1,7 @@
 package objects;
 
 import information.AnimalSpecification;
-import model.MapDirection;
-import model.MapElement;
-import model.Vector2d;
+import model.*;
 
 import java.rmi.server.UID;
 import java.util.ArrayList;
@@ -23,7 +21,8 @@ public class Animal implements MapElement {
     private Animal secondParent = null;
     private final UID id = new UID();
 
-    private List<Integer> genome = new ArrayList<>();
+    private Genome genome;
+    private int activeGene = 0;
 
     public Animal(Vector2d position, AnimalSpecification spec) {
         Random random = new Random();
@@ -31,6 +30,7 @@ public class Animal implements MapElement {
         this.orientation = MapDirection.fromInt(new Random().nextInt(8));
         this.position = position;
         this.energy = spec.startingEnergy();
+        this.genome = new Genome(spec.genomeSpec());
     }
 
     @Override
@@ -55,6 +55,9 @@ public class Animal implements MapElement {
     public int getPlantsEatenCount() {
         return this.plantsEatenCount;
     }
+    public Genome getGenome() {
+        return this.genome;
+    }
     public UID getId() {
         return this.id;
     }
@@ -77,6 +80,7 @@ public class Animal implements MapElement {
     public void nextDay() {
         this.age++;
         this.consumeEnergy(1);
+        this.activeGene = (this.activeGene + 1) % genome.getLength();
     }
     public boolean isDead() {
         return this.energy <= 0;
@@ -85,6 +89,12 @@ public class Animal implements MapElement {
         consumeEnergy(spec.reproductionCost());
         //to do
         return this;
+    }
+    public void move(MapDirection direction, MoveValidator validator) {
+        Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
+        if(validator.canMoveTo(newPosition)) {
+            this.position = newPosition;
+        }
     }
 
     //to do

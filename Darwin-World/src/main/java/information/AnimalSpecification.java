@@ -5,6 +5,6 @@ public record AnimalSpecification(
         int energyFromEating,
         int reproductionMinEnergy,
         int reproductionCost,
-        GenomeSpecification genomeInfo
+        GenomeSpecification genomeSpec
 ) {
 }
