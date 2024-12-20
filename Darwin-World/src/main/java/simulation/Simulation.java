@@ -15,14 +15,16 @@ public class Simulation implements Runnable {
 
     @Override
     public void run() {
-        if (running) {
+        while (running) {
             map.moveAnimals();
-        }
-        try {
-            Thread.sleep(2000);
-        }
-        catch (InterruptedException e) {
-            System.out.println("Simulation interrupted");
+            map.endDay();
+            try {
+                Thread.sleep(500);
+            }
+            catch (InterruptedException e) {
+                System.out.println("Simulation interrupted");
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
