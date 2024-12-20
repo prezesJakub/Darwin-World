@@ -31,6 +31,10 @@ public class Animal implements MapElement {
         this.genome = new Genome(spec.genomeSpec());
     }
 
+    public void setPosition(Vector2d position) {
+        this.position = position;
+    }
+
     @Override
     public Vector2d getPosition() {
         return this.position;

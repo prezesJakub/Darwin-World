@@ -56,8 +56,15 @@ public class AbstractWorldMap implements WorldMap {
         if(animalList.isEmpty()) {
             animals.remove(oldPosition);
         }
-        List<Animal> newAnimalList = animals.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
+        Vector2d newPosition = animal.getPosition();
+        newPosition = fixPosition(newPosition);
+        animal.setPosition(newPosition);
+        List<Animal> newAnimalList = animals.computeIfAbsent(newPosition, k -> new ArrayList<>());
         newAnimalList.add(animal);
+    }
+
+    public Vector2d fixPosition(Vector2d position) {
+        return position;
     }
 
     public void moveAnimals() {
