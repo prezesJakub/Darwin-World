@@ -16,6 +16,7 @@ import model.Vector2d;
 import objects.Animal;
 import simulation.Simulation;
 
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -28,7 +29,6 @@ public class SimulationPresenter implements MapChangeListener {
     private int mapWidth;
     private int mapHeight;
     private int cellSize;
-    private Label[][] cells;
     private Simulation simulation;
 
     @FXML
@@ -46,7 +46,6 @@ public class SimulationPresenter implements MapChangeListener {
         mapWidth=map.getWidth();
         mapHeight=map.getHeight();
         cellSize = Math.round(Math.min(MAP_WIDTH/(mapWidth+1), MAP_HEIGHT/(mapHeight+1)));
-        cells = new Label[mapWidth][mapHeight];
         Platform.runLater(() -> drawMap());
     }
 
@@ -78,8 +77,8 @@ public class SimulationPresenter implements MapChangeListener {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(cellSize));
             mapGrid.add(label1, i+1, 0);
         }
-        for(int i=mapHeight-1; i>=0; i--) {
-            Label label2 = new Label(Integer.toString(i));
+        for(int i=0; i<mapHeight; i++) {
+            Label label2 = new Label(Integer.toString(mapHeight-i-1));
             GridPane.setHalignment(label2, HPos.CENTER);
             mapGrid.getRowConstraints().add(new RowConstraints(cellSize));
             mapGrid.add(label2, 0, i+1);
@@ -87,19 +86,14 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void addAnimals() {
-        System.out.println(map.getElementPositions());
         List<Vector2d> elementPositions = map.getElementPositions();
         for(Vector2d pos : elementPositions) {
             int x = pos.getX();
             int y = pos.getY();
-            mapGrid.add(new Label(map.getElement(pos).toString()), x+1, y+1);
+            mapGrid.add(new Label(map.getElement(pos).toString()), x+1, mapHeight-y);
             mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
         }
-        List<Animal> animaltest = map.getAnimals();
-        for(Animal element : animaltest) {
-            int[] genes = element.getGenome().getGenes();
-            System.out.println(Arrays.toString(genes));
-        }
+       // System.out.println(map.getElementPositions());
     }
 
     public void setSimulation(Simulation simulation) {

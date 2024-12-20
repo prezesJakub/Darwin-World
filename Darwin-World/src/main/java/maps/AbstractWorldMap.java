@@ -4,14 +4,14 @@ import information.AnimalSpecification;
 import information.MapSpecification;
 import model.MapChangeListener;
 import model.MapDirection;
-import model.MapElement;
 import model.Vector2d;
 import objects.Animal;
 
 import java.util.*;
 
 public class AbstractWorldMap implements WorldMap {
-    protected final Map<Vector2d, Animal> animals = new HashMap<>();
+ //   private List<Animal> animalList = new ArrayList<>();
+    protected final Map<Vector2d, List<Animal>> animals = Collections.synchronizedMap(new HashMap<>());
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
     private final MapSpecification mapSpec;
@@ -22,10 +22,10 @@ public class AbstractWorldMap implements WorldMap {
 
     public void generateAnimals(int numberOfAnimals, AnimalSpecification animalSpec) {
         for(int i=0; i<numberOfAnimals; i++) {
-            Vector2d position = new Vector2d((int) (Math.random() * (mapSpec.mapWidth()-1)),
-                    (int) (Math.random() * (mapSpec.mapHeight()-1)));
+            Vector2d position = new Vector2d((int) (Math.random() * (mapSpec.mapWidth())),
+                    (int) (Math.random() * (mapSpec.mapHeight())));
             Animal animal = new Animal(position, animalSpec);
-            animals.put(position, animal);
+            place(animal);
         }
         mapChanged("Generated animals");
     }
@@ -34,7 +34,14 @@ public class AbstractWorldMap implements WorldMap {
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
         if(canMoveTo(position)) {
-            animals.put(position, animal);
+            if(animals.containsKey(position)) {
+                List<Animal> animalList = animals.get(position);
+                animalList.add(animal);
+            } else {
+                List<Animal> animalList = new ArrayList<>();
+                animalList.add(animal);
+                animals.put(position, animalList);
+            }
             mapChanged("Animal placed at " + position);
         }
     }
@@ -42,17 +49,44 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public void move(Animal animal, MapDirection direction) {
         Vector2d oldPosition = animal.getPosition();
-        if(getElement(oldPosition) == animal) {
-            //to do
+   //     System.out.println(animal.getActiveGene() + " " + animal.getPosition());
+        animal.move(direction, this);
+        List<Animal> animalList = animals.get(oldPosition);
+        animalList.remove(animal);
+        if(animalList.isEmpty()) {
+            animals.remove(oldPosition);
         }
+        List<Animal> newAnimalList = animals.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
+        newAnimalList.add(animal);
     }
 
     public void moveAnimals() {
-        Map<Vector2d, Animal> newAnimalMap = new HashMap<>();
+        Map<Vector2d, List<Animal>> animalsMap = copyAnimalsMap();
+        for(Map.Entry<Vector2d, List<Animal>> entry : animalsMap.entrySet()) {
+            List<Animal> animalList = entry.getValue();
 
-        animals.values().forEach(Animal -> {
-            //to do
-        });
+            for(Animal animal : animalList) {
+                int actualGene = animal.getActiveGene();
+                animal.rotate(MapDirection.fromInt(actualGene));
+                move(animal, animal.getOrientation());
+            }
+        }
+        mapChanged("Moved animals");
+    }
+
+    private Map<Vector2d, List<Animal>> copyAnimalsMap() {
+        Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
+        for(Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
+            Vector2d position = entry.getKey();
+            List<Animal> animalList = entry.getValue();
+            List<Animal> animalListCopy = new ArrayList<>(animalList);
+            animalsMap.put(position, animalListCopy);
+        }
+        return animalsMap;
+    }
+
+    public void endDay() {
+        mapChanged("End day");
     }
 
     @Override
@@ -61,7 +95,7 @@ public class AbstractWorldMap implements WorldMap {
     }
 
     @Override
-    public MapElement getElement(Vector2d position) {
+    public List<Animal> getElement(Vector2d position) {
         return animals.get(position);
     }
 
@@ -76,6 +110,7 @@ public class AbstractWorldMap implements WorldMap {
     }
 
     protected void mapChanged(String message) {
+        System.out.println(message);
         for(MapChangeListener observer : observers) {
             observer.mapChanged(this, message);
         }
@@ -86,11 +121,11 @@ public class AbstractWorldMap implements WorldMap {
         return id;
     }
 
-    @Override
+ /*   @Override
     public List<Animal> getAnimals() {
         List<Animal> elements = new ArrayList<>(animals.values());
         return elements;
-    }
+    }*/
 
     @Override
     public List<Vector2d> getElementPositions() {
@@ -98,10 +133,10 @@ public class AbstractWorldMap implements WorldMap {
         return elementPositions;
     }
 
-
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return true; //do zrobienia
+        return position.precedes(new Vector2d(mapSpec.mapWidth()-1, mapSpec.mapHeight()-1)) &&
+                position.follows(new Vector2d(0,0));
     }
 
     @Override

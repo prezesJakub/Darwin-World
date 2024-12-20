@@ -4,8 +4,6 @@ import information.AnimalSpecification;
 import model.*;
 
 import java.rmi.server.UID;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Animal implements MapElement {
@@ -22,7 +20,7 @@ public class Animal implements MapElement {
     private final UID id = new UID();
 
     private Genome genome;
-    private int activeGene = 0;
+    private int activeGeneId = 0;
 
     public Animal(Vector2d position, AnimalSpecification spec) {
         Random random = new Random();
@@ -58,6 +56,13 @@ public class Animal implements MapElement {
     public Genome getGenome() {
         return this.genome;
     }
+    public int getActiveGeneId() {
+        return this.activeGeneId;
+    }
+    public int getActiveGene() {
+        int[] genes = this.genome.getGenes();
+        return genes[this.activeGeneId];
+    }
     public UID getId() {
         return this.id;
     }
@@ -80,7 +85,7 @@ public class Animal implements MapElement {
     public void nextDay() {
         this.age++;
         this.consumeEnergy(1);
-        this.activeGene = (this.activeGene + 1) % genome.getLength();
+        this.activeGeneId = (this.activeGeneId + 1) % genome.getLength();
     }
     public boolean isDead() {
         return this.energy <= 0;
@@ -89,6 +94,10 @@ public class Animal implements MapElement {
         consumeEnergy(spec.reproductionCost());
         //to do
         return this;
+    }
+    public void rotate(MapDirection direction) {
+        this.orientation = MapDirection.fromInt((this.orientation.toInt()+direction.toInt()) % 8);
+        this.activeGeneId = (this.activeGeneId + 1) % genome.getLength();
     }
     public void move(MapDirection direction, MoveValidator validator) {
         Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
