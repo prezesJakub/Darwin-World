@@ -12,7 +12,7 @@ public class Earth extends AbstractWorldMap {
     @Override
     public boolean canMoveTo(Vector2d position) {
         MapSpecification mapSpec = this.getMapSpec();
-        return position.precedes(new Vector2d(Integer.MAX_VALUE, mapSpec.mapHeight()-1)) &&
+        return position.precedes(new Vector2d(Integer.MAX_VALUE, mapSpec.bounds().getHeight()-1)) &&
                 position.follows(new Vector2d(Integer.MIN_VALUE,0));
     }
 

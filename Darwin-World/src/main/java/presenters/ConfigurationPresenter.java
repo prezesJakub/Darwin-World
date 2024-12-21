@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import maps.AbstractWorldMap;
 import maps.Earth;
 import maps.WorldMap;
+import model.Boundary;
 import simulation.Simulation;
 
 import java.io.IOException;
@@ -49,8 +50,8 @@ public class ConfigurationPresenter {
 
 
     private WorldMap configureMap() {
-        MapSpecification mapSpec = new MapSpecification(mapWidthField.getValue(),
-                mapHeightField.getValue(), plantsAmountField.getValue(), animalsAmountField.getValue(),
+        Boundary bounds = new Boundary(mapWidthField.getValue(), mapHeightField.getValue());
+        MapSpecification mapSpec = new MapSpecification(bounds, plantsAmountField.getValue(), animalsAmountField.getValue(),
                 dailyPlantsGrowField.getValue(), 0);
         return new Earth(mapSpec);
     }
@@ -75,7 +76,7 @@ public class ConfigurationPresenter {
         SimulationPresenter presenter = loader.getController();
         WorldMap map = configureMap();
         presenter.setWorldMap(map);
-        Simulation simulation = new Simulation(map, map.getStartingAnimalsAmount(), configureAnimal());
+        Simulation simulation = new Simulation(map, configureAnimal());
         presenter.setSimulation(simulation);
 
         threadPool.submit(simulation);

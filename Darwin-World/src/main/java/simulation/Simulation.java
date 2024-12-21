@@ -8,9 +8,10 @@ public class Simulation implements Runnable {
     private boolean running = true;
 
 
-    public Simulation(WorldMap map, int startingAnimalsAmount, AnimalSpecification animalSpec) {
+    public Simulation(WorldMap map, AnimalSpecification animalSpec) {
         this.map=map;
-        map.generateAnimals(startingAnimalsAmount, animalSpec);
+        map.generateAnimals(map.getMapSpec().startingAnimalsAmount(), animalSpec);
+        map.generatePlants(map.getMapSpec().startingPlantsAmount());
     }
 
     @Override
@@ -18,6 +19,9 @@ public class Simulation implements Runnable {
         while (running) {
             map.moveAnimals();
             map.endDay();
+            map.generatePlants(map.getMapSpec().dailyPlantsGrowth());
+        //    System.out.println(map.getPlantPositions());
+           // System.out.println(map.getPlantPositions().size());
             try {
                 Thread.sleep(500);
             }

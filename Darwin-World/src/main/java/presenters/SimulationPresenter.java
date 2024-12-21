@@ -1,23 +1,17 @@
 package presenters;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import maps.WorldMap;
 import model.MapChangeListener;
-import model.MapElement;
 import model.Vector2d;
-import objects.Animal;
 import simulation.Simulation;
 
-import java.sql.SQLOutput;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -86,14 +80,14 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void addAnimals() {
-        List<Vector2d> elementPositions = map.getElementPositions();
+        List<Vector2d> elementPositions = map.getAnimalPositions();
         for(Vector2d pos : elementPositions) {
             int x = pos.getX();
             int y = pos.getY();
-            mapGrid.add(new Label(map.getElement(pos).toString()), x+1, mapHeight-y);
+            mapGrid.add(new Label(map.getAnimal(pos).toString()), x+1, mapHeight-y);
             mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
         }
-       // System.out.println(map.getElementPositions());
+       // System.out.println(map.getAnimalPositions());
     }
 
     public void setSimulation(Simulation simulation) {
