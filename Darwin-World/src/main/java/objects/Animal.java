@@ -101,13 +101,16 @@ public class Animal implements MapElement {
     }
     public void rotate(MapDirection direction) {
         this.orientation = MapDirection.fromInt((this.orientation.toInt()+direction.toInt()) % 8);
-        this.activeGeneId = (this.activeGeneId + 1) % genome.getLength();
     }
     public void move(MapDirection direction, MoveValidator validator) {
         Vector2d newPosition = this.position.add(this.orientation.toUnitVector());
         if(validator.canMoveTo(newPosition)) {
             this.position = newPosition;
         }
+        else {
+            this.orientation = MapDirection.fromInt((this.orientation.toInt()+4) % 8);
+        }
+        nextDay();
     }
 
     //to do
