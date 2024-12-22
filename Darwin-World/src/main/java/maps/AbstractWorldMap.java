@@ -105,9 +105,39 @@ public class AbstractWorldMap implements WorldMap {
         return animalsMap;
     }
 
+    @Override
     public void endDay() {
         generatePlants(getMapSpec().dailyPlantsGrowth());
         mapChanged("End day");
+    }
+
+    @Override
+    public void sortAnimals() {
+        Random random = new Random();
+
+        Comparator<Animal> animalComparator = Comparator.comparingInt(Animal::getEnergy).reversed().
+                thenComparingInt(Animal::getAge).reversed().
+                thenComparingInt(Animal::getChildrenCount).reversed().
+                thenComparing((a1, a2) -> random.nextBoolean() ? -1 : 1);
+
+        for(Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
+            List<Animal> animalList = entry.getValue();
+            animalList.sort(animalComparator);
+        }
+    }
+
+    @Override
+    public void feedAnimals() {
+        for(Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
+            Vector2d position = entry.getKey();
+            List<Animal> animalList = entry.getValue();
+
+            if(plants.containsKey(position)) {
+                Animal animal = animalList.get(0);
+                animal.eat();
+                plants.remove(position);
+            }
+        }
     }
 
     @Override

@@ -25,6 +25,9 @@ public class Simulation implements Runnable {
                 Thread.currentThread().interrupt();
             }
             map.moveAnimals();
+            map.sortAnimals();
+            map.feedAnimals();
+            //System.out.println(map.getPlantPositions().size());
             map.endDay();
         }
     }
