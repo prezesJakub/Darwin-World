@@ -2,32 +2,45 @@ package maps;
 
 import information.AnimalSpecification;
 import information.MapSpecification;
+import model.FoodGenerator;
 import model.MapChangeListener;
 import model.MapDirection;
 import model.Vector2d;
 import objects.Animal;
+import objects.Grass;
 
 import java.util.*;
 
 public class AbstractWorldMap implements WorldMap {
- //   private List<Animal> animalList = new ArrayList<>();
     protected final Map<Vector2d, List<Animal>> animals = Collections.synchronizedMap(new HashMap<>());
+    protected final Map<Vector2d, Grass> plants = Collections.synchronizedMap(new HashMap<>());
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
     private final MapSpecification mapSpec;
+    private final FoodGenerator foodGenerator;
 
     public AbstractWorldMap(MapSpecification mapSpec) {
         this.mapSpec = mapSpec;
+        this.foodGenerator = new FoodGenerator(mapSpec.bounds());
     }
 
     public void generateAnimals(int numberOfAnimals, AnimalSpecification animalSpec) {
         for(int i=0; i<numberOfAnimals; i++) {
-            Vector2d position = new Vector2d((int) (Math.random() * (mapSpec.mapWidth())),
-                    (int) (Math.random() * (mapSpec.mapHeight())));
+            Vector2d position = new Vector2d((int) (Math.random() * (mapSpec.bounds().getWidth())),
+                    (int) (Math.random() * (mapSpec.bounds().getHeight())));
             Animal animal = new Animal(position, animalSpec);
             place(animal);
         }
         mapChanged("Generated animals");
+    }
+
+    public void generatePlants(int numberOfPlants) {
+        List<Vector2d> plantPositions = foodGenerator.generateFood(plants, numberOfPlants);
+        for(Vector2d position : plantPositions) {
+            Grass grass = new Grass(position);
+            plants.put(position, grass);
+        }
+        mapChanged("Generated plants");
     }
 
     @Override
@@ -56,8 +69,15 @@ public class AbstractWorldMap implements WorldMap {
         if(animalList.isEmpty()) {
             animals.remove(oldPosition);
         }
-        List<Animal> newAnimalList = animals.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
+        Vector2d newPosition = animal.getPosition();
+        newPosition = fixPosition(newPosition);
+        animal.setPosition(newPosition);
+        List<Animal> newAnimalList = animals.computeIfAbsent(newPosition, k -> new ArrayList<>());
         newAnimalList.add(animal);
+    }
+
+    public Vector2d fixPosition(Vector2d position) {
+        return position;
     }
 
     public void moveAnimals() {
@@ -86,17 +106,23 @@ public class AbstractWorldMap implements WorldMap {
     }
 
     public void endDay() {
+        generatePlants(getMapSpec().dailyPlantsGrowth());
         mapChanged("End day");
     }
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return getElement(position) != null;
+        return getAnimal(position) != null;
     }
 
     @Override
-    public List<Animal> getElement(Vector2d position) {
+    public List<Animal> getAnimal(Vector2d position) {
         return animals.get(position);
+    }
+
+    @Override
+    public Grass getPlant(Vector2d position) {
+        return plants.get(position);
     }
 
     @Override
@@ -121,21 +147,19 @@ public class AbstractWorldMap implements WorldMap {
         return id;
     }
 
- /*   @Override
-    public List<Animal> getAnimals() {
-        List<Animal> elements = new ArrayList<>(animals.values());
-        return elements;
-    }*/
+    @Override
+    public List<Vector2d> getAnimalPositions() {
+        return new ArrayList<>(animals.keySet());
+    }
 
     @Override
-    public List<Vector2d> getElementPositions() {
-        List<Vector2d> elementPositions = new ArrayList<>(animals.keySet());
-        return elementPositions;
+    public List<Vector2d> getPlantPositions() {
+        return new ArrayList<>(plants.keySet());
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return position.precedes(new Vector2d(mapSpec.mapWidth()-1, mapSpec.mapHeight()-1)) &&
+        return position.precedes(new Vector2d(mapSpec.bounds().getWidth()-1, mapSpec.bounds().getHeight()-1)) &&
                 position.follows(new Vector2d(0,0));
     }
 
@@ -146,12 +170,12 @@ public class AbstractWorldMap implements WorldMap {
 
     @Override
     public int getWidth() {
-        return this.mapSpec.mapWidth();
+        return this.mapSpec.bounds().getWidth();
     }
 
     @Override
     public int getHeight() {
-        return this.mapSpec.mapHeight();
+        return this.mapSpec.bounds().getHeight();
     }
 
     @Override

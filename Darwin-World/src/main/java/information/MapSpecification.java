@@ -1,10 +1,10 @@
 package information;
 
 import maps.WorldMap;
+import model.Boundary;
 
 public record MapSpecification(
-        int mapWidth,
-        int mapHeight,
+        Boundary bounds,
         int startingPlantsAmount,
         int startingAnimalsAmount,
         int dailyPlantsGrowth,
