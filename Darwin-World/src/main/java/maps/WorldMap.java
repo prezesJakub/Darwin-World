@@ -4,6 +4,7 @@ import information.AnimalSpecification;
 import information.MapSpecification;
 import model.*;
 import objects.Animal;
+import objects.Grass;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +18,7 @@ public interface WorldMap extends MoveValidator {
     void endDay();
     boolean isOccupied(Vector2d position);
     List<Animal> getAnimal(Vector2d position);
+    Grass getPlant(Vector2d position);
     void addObserver(MapChangeListener observer);
     void removeObserver(MapChangeListener observer);
     UUID getId();

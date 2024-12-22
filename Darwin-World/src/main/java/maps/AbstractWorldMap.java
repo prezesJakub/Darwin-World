@@ -106,6 +106,7 @@ public class AbstractWorldMap implements WorldMap {
     }
 
     public void endDay() {
+        generatePlants(getMapSpec().dailyPlantsGrowth());
         mapChanged("End day");
     }
 
@@ -117,6 +118,11 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public List<Animal> getAnimal(Vector2d position) {
         return animals.get(position);
+    }
+
+    @Override
+    public Grass getPlant(Vector2d position) {
+        return plants.get(position);
     }
 
     @Override

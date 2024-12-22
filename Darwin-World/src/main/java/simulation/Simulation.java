@@ -17,11 +17,6 @@ public class Simulation implements Runnable {
     @Override
     public void run() {
         while (running) {
-            map.moveAnimals();
-            map.endDay();
-            map.generatePlants(map.getMapSpec().dailyPlantsGrowth());
-        //    System.out.println(map.getPlantPositions());
-           // System.out.println(map.getPlantPositions().size());
             try {
                 Thread.sleep(500);
             }
@@ -29,6 +24,8 @@ public class Simulation implements Runnable {
                 System.out.println("Simulation interrupted");
                 Thread.currentThread().interrupt();
             }
+            map.moveAnimals();
+            map.endDay();
         }
     }
 

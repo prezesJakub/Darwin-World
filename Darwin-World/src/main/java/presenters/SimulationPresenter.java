@@ -47,6 +47,7 @@ public class SimulationPresenter implements MapChangeListener {
         clearGrid();
         headerLabel();
         generateTable();
+        addPlants();
         addAnimals();
     }
 
@@ -80,14 +81,24 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void addAnimals() {
-        List<Vector2d> elementPositions = map.getAnimalPositions();
-        for(Vector2d pos : elementPositions) {
+        List<Vector2d> animalPositions = map.getAnimalPositions();
+        for(Vector2d pos : animalPositions) {
             int x = pos.getX();
             int y = pos.getY();
             mapGrid.add(new Label(map.getAnimal(pos).toString()), x+1, mapHeight-y);
             mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
         }
        // System.out.println(map.getAnimalPositions());
+    }
+
+    private void addPlants() {
+        List<Vector2d> plantPositions = map.getPlantPositions();
+        for(Vector2d pos : plantPositions) {
+            int x = pos.getX();
+            int y = pos.getY();
+            mapGrid.add(new Label(map.getPlant(pos).toString()), x+1, mapHeight-y);
+            mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
+        }
     }
 
     public void setSimulation(Simulation simulation) {
