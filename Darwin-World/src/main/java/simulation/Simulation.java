@@ -24,6 +24,7 @@ public class Simulation implements Runnable {
                 System.out.println("Simulation interrupted");
                 Thread.currentThread().interrupt();
             }
+            map.cleanDeadBodies();
             map.moveAnimals();
             map.sortAnimals();
             map.feedAnimals();

@@ -72,6 +72,7 @@ public class Animal implements MapElement {
     }
     public String toString() {
         return this.orientation.toString();
+        //return String.valueOf(this.energy);
     }
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);

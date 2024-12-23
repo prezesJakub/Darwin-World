@@ -13,6 +13,7 @@ import java.util.*;
 
 public class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, List<Animal>> animals = Collections.synchronizedMap(new HashMap<>());
+    protected final List<Animal> deadAnimals = Collections.synchronizedList(new ArrayList<>());
     protected final Map<Vector2d, Grass> plants = Collections.synchronizedMap(new HashMap<>());
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
@@ -138,6 +139,30 @@ public class AbstractWorldMap implements WorldMap {
                 plants.remove(position);
             }
         }
+    }
+
+    @Override
+    public void cleanDeadBodies() {
+        synchronized(animals) {
+            Iterator<Map.Entry<Vector2d, List<Animal>>> iterator = animals.entrySet().iterator();
+            while(iterator.hasNext()) {
+                Map.Entry<Vector2d, List<Animal>> entry = iterator.next();
+                List<Animal> animalList = entry.getValue();
+                List<Animal> deadAnimalsOnField = new ArrayList<>();
+
+                for(Animal animal : animalList) {
+                    if(animal.isDead()) {
+                        deadAnimalsOnField.add(animal);
+                        deadAnimals.add(animal);
+                    }
+                }
+                animalList.removeAll(deadAnimalsOnField);
+                if(animalList.isEmpty()) {
+                    iterator.remove();
+                }
+            }
+        }
+        mapChanged("Cleaned dead bodies");
     }
 
     @Override

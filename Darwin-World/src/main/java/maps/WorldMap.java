@@ -18,6 +18,7 @@ public interface WorldMap extends MoveValidator {
     void endDay();
     void sortAnimals();
     void feedAnimals();
+    void cleanDeadBodies();
     boolean isOccupied(Vector2d position);
     List<Animal> getAnimal(Vector2d position);
     Grass getPlant(Vector2d position);
