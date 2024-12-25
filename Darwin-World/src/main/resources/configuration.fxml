@@ -41,7 +41,7 @@
             </HBox>
             <HBox fx:id="waterRangeBox" spacing="5" alignment="CENTER" style="-fx-padding: 5" visible="false" managed="false">
                 <Label text="Maksymalny zasięg wody: " styleClass="labelStyle"/>
-                <Spinner fx:id="waterRangeField" styleClass="spinnerStyle" min="1" max="100" initialValue="3"/>
+                <Spinner fx:id="waterRangeField" styleClass="spinnerStyle" min="0" max="100" initialValue="3"/>
             </HBox>
             <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
                 <Label text="Ilość roślin: " styleClass="labelStyle"/>

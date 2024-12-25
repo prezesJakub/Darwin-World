@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import maps.WaterMap;
 import maps.WorldMap;
 import model.MapChangeListener;
 import model.Vector2d;
@@ -50,6 +51,7 @@ public class SimulationPresenter implements MapChangeListener {
         generateTable();
         addPlants();
         addAnimals();
+        addWater();
     }
 
     private void clearGrid() {
@@ -99,6 +101,18 @@ public class SimulationPresenter implements MapChangeListener {
             int y = pos.getY();
             mapGrid.add(new Label(map.getPlant(pos).toString()), x+1, mapHeight-y);
             mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
+        }
+    }
+
+    private void addWater() {
+        for(int i=0; i<mapWidth; i++) {
+            for(int j=0; j<mapHeight; j++) {
+                Vector2d pos = new Vector2d(i, j);
+                if(map.isWater(pos)) {
+                    mapGrid.add(new Label("W"), i+1, mapHeight-j);
+                    mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
+                }
+            }
         }
     }
 

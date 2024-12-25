@@ -3,6 +3,7 @@ package presenters;
 import information.AnimalSpecification;
 import information.GenomeSpecification;
 import information.MapSpecification;
+import information.WaterSpecification;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +16,12 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import maps.AbstractWorldMap;
 import maps.Earth;
+import maps.WaterMap;
 import maps.WorldMap;
 import model.Boundary;
 import model.MapType;
 import model.MutationType;
+import objects.Water;
 import simulation.Simulation;
 
 import java.io.IOException;
@@ -76,7 +79,12 @@ public class ConfigurationPresenter {
         };
         MapSpecification mapSpec = new MapSpecification(bounds, plantsAmountField.getValue(), animalsAmountField.getValue(),
                 dailyPlantsGrowField.getValue(), mapType);
-        return new Earth(mapSpec);
+        if(mapType == MapType.EARTH) {
+            return new Earth(mapSpec);
+        } else {
+            WaterSpecification waterSpec = configureWater();
+            return new WaterMap(mapSpec, waterSpec);
+        }
     }
     private GenomeSpecification configureGenome() {
         MutationType mutationType = switch(mutationTypeField.getValue()) {
@@ -93,6 +101,10 @@ public class ConfigurationPresenter {
                 energyFromEatingField.getValue(), reproductionMinEnergyField.getValue(),
                 reproductionCostField.getValue(), configureGenome());
         return animalSpec;
+    }
+    private WaterSpecification configureWater() {
+        WaterSpecification waterSpec = new WaterSpecification(waterAmountField.getValue(), waterRangeField.getValue());
+        return waterSpec;
     }
 
     @FXML

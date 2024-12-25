@@ -1,7 +1,9 @@
 package simulation;
 
 import information.AnimalSpecification;
+import maps.WaterMap;
 import maps.WorldMap;
+import model.MapType;
 
 public class Simulation implements Runnable {
     private WorldMap map;
@@ -12,6 +14,10 @@ public class Simulation implements Runnable {
         this.map=map;
         map.generateAnimals(map.getMapSpec().startingAnimalsAmount(), animalSpec);
         map.generatePlants(map.getMapSpec().startingPlantsAmount());
+
+        if(map instanceof WaterMap waterMap) {
+            waterMap.generateWater(waterMap.getWaterSpec().waterAmount(), waterMap.getWaterSpec().maxRange());
+        }
     }
 
     @Override

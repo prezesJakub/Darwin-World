@@ -228,6 +228,11 @@ public class AbstractWorldMap implements WorldMap {
     }
 
     @Override
+    public boolean isWater(Vector2d position) {
+        return false;
+    }
+
+    @Override
     public boolean canMoveTo(Vector2d position) {
         return position.precedes(new Vector2d(mapSpec.bounds().getWidth()-1, mapSpec.bounds().getHeight()-1)) &&
                 position.follows(new Vector2d(0,0));
