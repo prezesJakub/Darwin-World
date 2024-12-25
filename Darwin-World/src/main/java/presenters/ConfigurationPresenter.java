@@ -3,17 +3,22 @@ package presenters;
 import information.AnimalSpecification;
 import information.GenomeSpecification;
 import information.MapSpecification;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import maps.AbstractWorldMap;
 import maps.Earth;
 import maps.WorldMap;
 import model.Boundary;
+import model.MapType;
+import model.MutationType;
 import simulation.Simulation;
 
 import java.io.IOException;
@@ -27,6 +32,12 @@ public class ConfigurationPresenter {
     private Spinner<Integer> mapWidthField;
     @FXML
     private Spinner<Integer> mapHeightField;
+    @FXML
+    private ComboBox<String> mapTypeField;
+    @FXML
+    private Spinner<Integer> waterAmountField;
+    @FXML
+    private Spinner<Integer> waterRangeField;
     @FXML
     private Spinner<Integer> plantsAmountField;
     @FXML
@@ -47,17 +58,34 @@ public class ConfigurationPresenter {
     private Spinner<Integer> maxMutationsField;
     @FXML
     private Spinner<Integer> genomeLengthField;
+    @FXML
+    private ComboBox<String> mutationTypeField;
+
+    @FXML
+    private HBox waterAmountBox;
+    @FXML
+    private HBox waterRangeBox;
 
 
     private WorldMap configureMap() {
         Boundary bounds = new Boundary(mapWidthField.getValue(), mapHeightField.getValue());
+        MapType mapType = switch(mapTypeField.getValue()) {
+            case "Kula ziemska" -> MapType.EARTH;
+            case "Przypływy i odpływy" -> MapType.WATER_MAP;
+            default -> MapType.EARTH;
+        };
         MapSpecification mapSpec = new MapSpecification(bounds, plantsAmountField.getValue(), animalsAmountField.getValue(),
-                dailyPlantsGrowField.getValue(), 0);
+                dailyPlantsGrowField.getValue(), mapType);
         return new Earth(mapSpec);
     }
     private GenomeSpecification configureGenome() {
+        MutationType mutationType = switch(mutationTypeField.getValue()) {
+            case "Pełna losowość" -> MutationType.COMPLETE_RANDOMNESS;
+            case "Lekka korekta" -> MutationType.SLIGHT_CORRECTION;
+            default -> MutationType.COMPLETE_RANDOMNESS;
+        };
         GenomeSpecification genomeSpec = new GenomeSpecification(minMutationsField.getValue(),
-                maxMutationsField.getValue(), genomeLengthField.getValue(), 0);
+                maxMutationsField.getValue(), genomeLengthField.getValue(), mutationType);
         return genomeSpec;
     }
     private AnimalSpecification configureAnimal() {
@@ -90,5 +118,22 @@ public class ConfigurationPresenter {
         stage.minWidthProperty().bind(viewRoot.widthProperty());
         stage.minHeightProperty().bind(viewRoot.heightProperty());
         stage.show();
+    }
+
+    public void onMapSelected() {
+        String selectedOption = mapTypeField.getValue();
+
+        if(selectedOption.equals("Kula ziemska")) {
+            waterAmountBox.setVisible(false);
+            waterAmountBox.setManaged(false);
+            waterRangeBox.setVisible(false);
+            waterRangeBox.setManaged(false);
+        }
+        else if(selectedOption.equals("Przypływy i odpływy")) {
+            waterAmountBox.setVisible(true);
+            waterAmountBox.setManaged(true);
+            waterRangeBox.setVisible(true);
+            waterRangeBox.setManaged(true);
+        }
     }
 }

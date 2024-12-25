@@ -6,9 +6,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.collections.FXCollections?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            minHeight="550.0" minWidth="850.0"
+            minHeight="700.0" minWidth="850.0"
             fx:controller="presenters.ConfigurationPresenter">
     <top>
         <VBox spacing="5" alignment="CENTER" style="-fx-padding: 5;">
@@ -19,6 +20,28 @@
             <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
                 <Label text="Wysokość mapy: " styleClass="labelStyle"/>
                 <Spinner fx:id="mapHeightField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Wariant mapy: " styleClass="labelStyle"/>
+                <ComboBox fx:id="mapTypeField" promptText="Wybierz opcję" onAction="#onMapSelected">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Kula ziemska"/>
+                            <String fx:value="Przypływy i odpływy"/>
+                        </FXCollections>
+                    </items>
+                    <value>
+                        <String fx:value="Kula ziemska"/>
+                    </value>
+                </ComboBox>
+            </HBox>
+            <HBox fx:id="waterAmountBox" spacing="5" alignment="CENTER" style="-fx-padding: 5" visible="false" managed="false">
+                <Label text="Ilość źródeł wody: " styleClass="labelStyle"/>
+                <Spinner fx:id="waterAmountField" styleClass="spinnerStyle" min="0" max="5" initialValue="1"/>
+            </HBox>
+            <HBox fx:id="waterRangeBox" spacing="5" alignment="CENTER" style="-fx-padding: 5" visible="false" managed="false">
+                <Label text="Maksymalny zasięg wody: " styleClass="labelStyle"/>
+                <Spinner fx:id="waterRangeField" styleClass="spinnerStyle" min="1" max="100" initialValue="3"/>
             </HBox>
             <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
                 <Label text="Ilość roślin: " styleClass="labelStyle"/>
@@ -59,6 +82,20 @@
             <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
                 <Label text="Długość genomu: " styleClass="labelStyle"/>
                 <Spinner fx:id="genomeLengthField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            </HBox>
+            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+                <Label text="Wariant mutacji: " styleClass="labelStyle"/>
+                <ComboBox fx:id="mutationTypeField" promptText="Wybierz opcję">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Pełna losowość"/>
+                            <String fx:value="Lekka korekta"/>
+                        </FXCollections>
+                    </items>
+                    <value>
+                        <String fx:value="Pełna losowość"/>
+                    </value>
+                </ComboBox>
             </HBox>
         </VBox>
     </top>
