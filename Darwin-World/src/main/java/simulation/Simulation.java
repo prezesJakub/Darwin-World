@@ -28,7 +28,7 @@ public class Simulation implements Runnable {
             map.moveAnimals();
             map.sortAnimals();
             map.feedAnimals();
-            //System.out.println(map.getPlantPositions().size());
+            map.reproduceAnimals();
             map.endDay();
         }
     }

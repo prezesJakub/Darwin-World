@@ -166,6 +166,21 @@ public class AbstractWorldMap implements WorldMap {
     }
 
     @Override
+    public void reproduceAnimals() {
+        for(Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
+            List<Animal> animalList = entry.getValue();
+            if(animalList.size() >= 2) {
+                Animal animal1 = animalList.get(0);
+                Animal animal2 = animalList.get(1);
+                if(animal1.canReproduce() && animal2.canReproduce()) {
+                    Animal child = animal1.reproduce(animal2);
+                    animalList.add(child);
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean isOccupied(Vector2d position) {
         return getAnimal(position) != null;
     }
