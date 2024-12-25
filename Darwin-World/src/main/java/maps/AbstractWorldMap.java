@@ -13,6 +13,7 @@ import java.util.*;
 
 public class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, List<Animal>> animals = Collections.synchronizedMap(new HashMap<>());
+    protected final List<Animal> deadAnimals = Collections.synchronizedList(new ArrayList<>());
     protected final Map<Vector2d, Grass> plants = Collections.synchronizedMap(new HashMap<>());
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
@@ -105,9 +106,78 @@ public class AbstractWorldMap implements WorldMap {
         return animalsMap;
     }
 
+    @Override
     public void endDay() {
         generatePlants(getMapSpec().dailyPlantsGrowth());
         mapChanged("End day");
+    }
+
+    @Override
+    public void sortAnimals() {
+        Random random = new Random();
+
+        Comparator<Animal> animalComparator = Comparator.comparingInt(Animal::getEnergy).reversed().
+                thenComparingInt(Animal::getAge).reversed().
+                thenComparingInt(Animal::getChildrenCount).reversed().
+                thenComparing((a1, a2) -> random.nextBoolean() ? -1 : 1);
+
+        for(Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
+            List<Animal> animalList = entry.getValue();
+            animalList.sort(animalComparator);
+        }
+    }
+
+    @Override
+    public void feedAnimals() {
+        for(Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
+            Vector2d position = entry.getKey();
+            List<Animal> animalList = entry.getValue();
+
+            if(plants.containsKey(position)) {
+                Animal animal = animalList.get(0);
+                animal.eat();
+                plants.remove(position);
+            }
+        }
+    }
+
+    @Override
+    public void cleanDeadBodies() {
+        synchronized(animals) {
+            Iterator<Map.Entry<Vector2d, List<Animal>>> iterator = animals.entrySet().iterator();
+            while(iterator.hasNext()) {
+                Map.Entry<Vector2d, List<Animal>> entry = iterator.next();
+                List<Animal> animalList = entry.getValue();
+                List<Animal> deadAnimalsOnField = new ArrayList<>();
+
+                for(Animal animal : animalList) {
+                    if(animal.isDead()) {
+                        deadAnimalsOnField.add(animal);
+                        deadAnimals.add(animal);
+                    }
+                }
+                animalList.removeAll(deadAnimalsOnField);
+                if(animalList.isEmpty()) {
+                    iterator.remove();
+                }
+            }
+        }
+        mapChanged("Cleaned dead bodies");
+    }
+
+    @Override
+    public void reproduceAnimals() {
+        for(Map.Entry<Vector2d, List<Animal>> entry : animals.entrySet()) {
+            List<Animal> animalList = entry.getValue();
+            if(animalList.size() >= 2) {
+                Animal animal1 = animalList.get(0);
+                Animal animal2 = animalList.get(1);
+                if(animal1.canReproduce() && animal2.canReproduce()) {
+                    Animal child = animal1.reproduce(animal2);
+                    animalList.add(child);
+                }
+            }
+        }
     }
 
     @Override

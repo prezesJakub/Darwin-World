@@ -16,7 +16,15 @@ public class Simulation implements Runnable {
 
     @Override
     public void run() {
-        while (running) {
+        while (true) {
+            if (running) {
+                map.cleanDeadBodies();
+                map.moveAnimals();
+                map.sortAnimals();
+                map.feedAnimals();
+                map.reproduceAnimals();
+                map.endDay();
+            }
             try {
                 Thread.sleep(500);
             }
@@ -24,15 +32,10 @@ public class Simulation implements Runnable {
                 System.out.println("Simulation interrupted");
                 Thread.currentThread().interrupt();
             }
-            map.moveAnimals();
-            map.endDay();
         }
     }
 
-    public void stopSimulation() {
-        running = false;
-    }
-    public void unpauseSimulation() {
-        running = true;
+    public void changeStateOfSimulation() {
+        running = !running;
     }
 }

@@ -4,6 +4,7 @@ import information.AnimalSpecification;
 import model.*;
 
 import java.rmi.server.UID;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Animal implements MapElement {
@@ -29,6 +30,16 @@ public class Animal implements MapElement {
         this.position = position;
         this.energy = spec.startingEnergy();
         this.genome = new Genome(spec.genomeSpec());
+    }
+
+    public Animal(Animal parent1, Animal parent2) {
+        this.spec = parent1.spec;
+        this.orientation = MapDirection.fromInt(new Random().nextInt(8));
+        this.position = parent1.position;
+        this.energy = 2 * spec.reproductionCost();
+        this.genome = new Genome(parent1, parent2);
+        this.firstParent = parent1;
+        this.secondParent = parent2;
     }
 
     public void setPosition(Vector2d position) {
@@ -72,6 +83,8 @@ public class Animal implements MapElement {
     }
     public String toString() {
         return this.orientation.toString();
+        //return String.valueOf(this.energy);
+        //return Arrays.toString(this.genome.getGenes());
     }
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
@@ -95,9 +108,12 @@ public class Animal implements MapElement {
         return this.energy <= 0;
     }
     public Animal reproduce(Animal partner) {
+        Animal child = new Animal(this, partner);
         consumeEnergy(spec.reproductionCost());
-        //to do
-        return this;
+        partner.consumeEnergy(spec.reproductionCost());
+        this.childrenCount++;
+        partner.childrenCount++;
+        return child;
     }
     public void rotate(MapDirection direction) {
         this.orientation = MapDirection.fromInt((this.orientation.toInt()+direction.toInt()) % 8);

@@ -10,9 +10,27 @@
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
             fx:controller="presenters.SimulationPresenter">
-    <center>
+    <left>
         <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
             <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER"/>
         </VBox>
-    </center>
+    </left>
+
+    <right>
+        <BorderPane>
+            <top>
+                <VBox style="-fx-padding: 10 25 10 10;">
+                    <HBox>
+
+                    </HBox>
+
+                    <VBox style="-fx-padding: 10 0 10 0;"/>
+
+                    <HBox alignment="CENTER">
+                        <Button text="Pause/Resume" onAction="#onPauseClicked" styleClass="pauseButton"/>
+                    </HBox>
+                </VBox>
+            </top>
+        </BorderPane>
+    </right>
 </BorderPane>

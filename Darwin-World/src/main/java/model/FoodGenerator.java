@@ -12,8 +12,8 @@ public class FoodGenerator {
     }
 
     public List<Vector2d> generateFood(Map<Vector2d, Grass> foodPositions, int plantsToGrow) {
-        int equatorPlants = (int) (0.8 * plantsToGrow);
-        int restOfPlants = plantsToGrow - equatorPlants;
+        int restOfPlants = (int) (0.2 * plantsToGrow);
+        int equatorPlants = plantsToGrow - restOfPlants;
 
         List<Vector2d> newEquatorPlants = new ArrayList<>();
         List<Vector2d> newRestOfPlants = new ArrayList<>();

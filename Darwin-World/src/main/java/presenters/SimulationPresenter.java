@@ -1,6 +1,7 @@
 package presenters;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
@@ -111,5 +112,9 @@ public class SimulationPresenter implements MapChangeListener {
         Platform.runLater(() -> {
             drawMap();
         });
+    }
+
+    public void onPauseClicked() {
+        simulation.changeStateOfSimulation();
     }
 }
