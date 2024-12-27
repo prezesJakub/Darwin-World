@@ -4,33 +4,33 @@ import information.AnimalSpecification;
 import information.GenomeSpecification;
 import information.MapSpecification;
 import information.WaterSpecification;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import maps.AbstractWorldMap;
 import maps.Earth;
 import maps.WaterMap;
 import maps.WorldMap;
-import model.Boundary;
-import model.MapType;
-import model.MutationType;
-import objects.Water;
+import model.*;
 import simulation.Simulation;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ConfigurationPresenter {
     private final ExecutorService threadPool = Executors.newFixedThreadPool(4);
 
+    @FXML
+    private TextField configNameField;
     @FXML
     private Spinner<Integer> mapWidthField;
     @FXML
@@ -156,8 +156,90 @@ public class ConfigurationPresenter {
     }
 
     public void onSaveConfigClicked() {
+        Configuration config;
+        try {
+            String[] configTable = {
+                    configNameField.getText(),
+                    String.valueOf(mapWidthField.getValue()),
+                    String.valueOf(mapHeightField.getValue()),
+                    mapTypeField.getValue(),
+                    String.valueOf(waterAmountField.getValue()),
+                    String.valueOf(waterRangeField.getValue()),
+                    String.valueOf(plantsAmountField.getValue()),
+                    String.valueOf(animalsAmountField.getValue()),
+                    String.valueOf(dailyPlantsGrowField.getValue()),
+                    String.valueOf(startingEnergyField.getValue()),
+                    String.valueOf(energyFromEatingField.getValue()),
+                    String.valueOf(reproductionMinEnergyField.getValue()),
+                    String.valueOf(reproductionCostField.getValue()),
+                    String.valueOf(minMutationsField.getValue()),
+                    String.valueOf(maxMutationsField.getValue()),
+                    String.valueOf(genomeLengthField.getValue()),
+                    mutationTypeField.getValue()
+            };
+            config = new Configuration(configTable);
+
+            if(config.getConfigName().isEmpty()) {
+                return;
+            }
+            if(ConfigurationStorage.findConfig(config.getConfigName()) != null) {
+                return;
+            }
+
+            ConfigurationStorage.saveConfiguration(config.getConfigTable());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void onLoadConfigClicked() {
+        try {
+            String[] configs = ConfigurationStorage.getConfigNames();
+
+            if(configs.length == 0) {
+                return;
+            }
+
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(configs[0], configs);
+            dialog.setTitle("Wczytaj konfigurację");
+            dialog.setHeaderText("Wczytaj konfigurację");
+            dialog.setContentText("Wybierz konfigurację: ");
+
+            Optional<String> selectedOption = dialog.showAndWait();
+
+            selectedOption.ifPresent(selectedConfig -> {
+                try {
+                    String[] config = ConfigurationStorage.findConfig(selectedConfig);
+                    if(config != null) {
+                        loadConfig(config);
+                    }
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+
+            });
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void loadConfig(String[] configTable) {
+        configNameField.setText(configTable[0]);
+        mapWidthField.getValueFactory().setValue(Integer.parseInt(configTable[1]));
+        mapHeightField.getValueFactory().setValue(Integer.parseInt(configTable[2]));
+        mapTypeField.setValue(configTable[3]);
+        waterAmountField.getValueFactory().setValue(Integer.parseInt(configTable[4]));
+        waterRangeField.getValueFactory().setValue(Integer.parseInt(configTable[5]));
+        plantsAmountField.getValueFactory().setValue(Integer.parseInt(configTable[6]));
+        animalsAmountField.getValueFactory().setValue(Integer.parseInt(configTable[7]));
+        dailyPlantsGrowField.getValueFactory().setValue(Integer.parseInt(configTable[8]));
+        startingEnergyField.getValueFactory().setValue(Integer.parseInt(configTable[9]));
+        energyFromEatingField.getValueFactory().setValue(Integer.parseInt(configTable[10]));
+        reproductionMinEnergyField.getValueFactory().setValue(Integer.parseInt(configTable[11]));
+        reproductionCostField.getValueFactory().setValue(Integer.parseInt(configTable[12]));
+        minMutationsField.getValueFactory().setValue(Integer.parseInt(configTable[13]));
+        maxMutationsField.getValueFactory().setValue(Integer.parseInt(configTable[14]));
+        genomeLengthField.getValueFactory().setValue(Integer.parseInt(configTable[15]));
+        mutationTypeField.setValue(configTable[16]);
     }
 }
