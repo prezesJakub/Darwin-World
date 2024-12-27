@@ -2,6 +2,7 @@ package maps;
 
 import information.AnimalSpecification;
 import information.MapSpecification;
+import information.MapStatistics;
 import model.FoodGenerator;
 import model.MapChangeListener;
 import model.MapDirection;
@@ -13,12 +14,14 @@ import java.util.*;
 
 public class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, List<Animal>> animals = Collections.synchronizedMap(new HashMap<>());
+    protected final List<Animal> aliveAnimals = Collections.synchronizedList(new ArrayList<>());
     protected final List<Animal> deadAnimals = Collections.synchronizedList(new ArrayList<>());
     protected final Map<Vector2d, Grass> plants = Collections.synchronizedMap(new HashMap<>());
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
     private final MapSpecification mapSpec;
     private final FoodGenerator foodGenerator;
+    private final MapStatistics mapStats = new MapStatistics();
 
     public AbstractWorldMap(MapSpecification mapSpec) {
         this.mapSpec = mapSpec;
@@ -48,6 +51,7 @@ public class AbstractWorldMap implements WorldMap {
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
         if(canMoveTo(position)) {
+            aliveAnimals.add(animal);
             if(animals.containsKey(position)) {
                 List<Animal> animalList = animals.get(position);
                 animalList.add(animal);
@@ -109,6 +113,7 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public void endDay() {
         generatePlants(getMapSpec().dailyPlantsGrowth());
+        mapStats.updateStats(this, aliveAnimals, deadAnimals, plants, animals);
         mapChanged("End day");
     }
 
@@ -154,6 +159,7 @@ public class AbstractWorldMap implements WorldMap {
                     if(animal.isDead()) {
                         deadAnimalsOnField.add(animal);
                         deadAnimals.add(animal);
+                        aliveAnimals.remove(animal);
                     }
                 }
                 animalList.removeAll(deadAnimalsOnField);
@@ -175,6 +181,7 @@ public class AbstractWorldMap implements WorldMap {
                 if(animal1.canReproduce() && animal2.canReproduce()) {
                     Animal child = animal1.reproduce(animal2);
                     animalList.add(child);
+                    aliveAnimals.add(child);
                 }
             }
         }
@@ -266,5 +273,10 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public int getDailyPlantsGrowth() {
         return this.mapSpec.dailyPlantsGrowth();
+    }
+
+    @Override
+    public MapStatistics getMapStats() {
+        return this.mapStats;
     }
 }

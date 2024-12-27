@@ -1,5 +1,6 @@
 package presenters;
 
+import information.MapStatistics;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,6 +31,10 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
 
+    @FXML
+    private Label dayStat, aliveAnimalsStat, allAnimalCountStat, plantCountStat, freeTilesStat,
+            mostPopularGenomeStat, averageEnergyStat, averageLifetimeStat, averageChildrenAmountStat;
+
     private final ExecutorService threadPool = Executors.newFixedThreadPool(4);
 
     public void setWorldMap(WorldMap map) {
@@ -52,6 +57,7 @@ public class SimulationPresenter implements MapChangeListener {
         addPlants();
         addAnimals();
         addWater();
+        updateStats();
     }
 
     private void clearGrid() {
@@ -114,6 +120,20 @@ public class SimulationPresenter implements MapChangeListener {
                 }
             }
         }
+    }
+
+    private void updateStats() {
+        MapStatistics currentStats = map.getMapStats();
+
+        dayStat.setText(String.valueOf(currentStats.getDay()));
+        aliveAnimalsStat.setText(String.valueOf(currentStats.getAliveAnimals()));
+        allAnimalCountStat.setText(String.valueOf(currentStats.getAllAnimalCount()));
+        plantCountStat.setText(String.valueOf(currentStats.getPlantCount()));
+        freeTilesStat.setText(String.valueOf(currentStats.getFreeTiles()));
+        mostPopularGenomeStat.setText(String.valueOf(currentStats.getMostPopularGenome()));
+        averageEnergyStat.setText(String.valueOf(currentStats.getAverageEnergy()));
+        averageLifetimeStat.setText(String.valueOf(currentStats.getAverageLifetime()));
+        averageChildrenAmountStat.setText(String.valueOf(currentStats.getAverageChildrenAmount()));
     }
 
     public void setSimulation(Simulation simulation) {

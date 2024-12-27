@@ -21,7 +21,35 @@
             <top>
                 <VBox style="-fx-padding: 10 25 10 10;">
                     <HBox>
+                        <GridPane styleClass="statsTable">
+                            <Label text="Dzień" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <Label fx:id="dayStat" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
+                            <Label text="Żyjące zwierzęta" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <Label fx:id="aliveAnimalsStat" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Wszystkie zwierzęta" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <Label fx:id="allAnimalCountStat" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <Label text="Ilość roślin" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                            <Label fx:id="plantCountStat" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                            <Label text="Wolne pola" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                            <Label fx:id="freeTilesStat" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                            <Label text="Najpopularniejszy genotyp" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                            <Label fx:id="mostPopularGenomeStat" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                            <Label text="Średnia energia" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                            <Label fx:id="averageEnergyStat" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                            <Label text="Średni czas życia" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                            <Label fx:id="averageLifetimeStat" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                            <Label text="Średnia ilość dzieci" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                            <Label fx:id="averageChildrenAmountStat" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+
+                        </GridPane>
                     </HBox>
 
                     <VBox style="-fx-padding: 10 0 10 0;"/>
@@ -33,4 +61,8 @@
             </top>
         </BorderPane>
     </right>
+
+    <stylesheets>
+        <String fx:value="simulationStyle.css"/>
+    </stylesheets>
 </BorderPane>

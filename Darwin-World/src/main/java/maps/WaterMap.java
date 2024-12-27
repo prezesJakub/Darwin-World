@@ -24,6 +24,7 @@ public class WaterMap extends AbstractWorldMap {
         generatePlants(getMapSpec().dailyPlantsGrowth());
         changeWaterStates();
         drownAnimals();
+        this.getMapStats().updateStats(this, aliveAnimals, deadAnimals, plants, animals);
         mapChanged("End day");
     }
 
@@ -61,6 +62,7 @@ public class WaterMap extends AbstractWorldMap {
                     if(isWater(position)) {
                         deadAnimalsOnField.add(animal);
                         deadAnimals.add(animal);
+                        aliveAnimals.remove(animal);
                     }
                 }
                 animalList.removeAll(deadAnimalsOnField);
