@@ -7,21 +7,28 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.collections.FXCollections?>
+<?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            minHeight="700.0" minWidth="850.0"
+            minHeight="500.0" minWidth="850.0"
             fx:controller="presenters.ConfigurationPresenter">
     <top>
         <VBox spacing="5" alignment="CENTER" style="-fx-padding: 5;">
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Szerokość mapy: " styleClass="labelStyle"/>
-                <Spinner fx:id="mapWidthField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            <HBox styleClass="HBoxStyle" style="-fx-padding: 5;">
+                <Label text="Nazwa konfiguracji: " styleClass="labelStyle"/>
+                <TextField fx:id="configNameField" styleClass="configNameStyle"/>
             </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Wysokość mapy: " styleClass="labelStyle"/>
-                <Spinner fx:id="mapHeightField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            <HBox styleClass="mainHBox">
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Szerokość mapy: " styleClass="labelStyle"/>
+                    <Spinner fx:id="mapWidthField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                </HBox>
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Wysokość mapy: " styleClass="labelStyle"/>
+                    <Spinner fx:id="mapHeightField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                </HBox>
             </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+            <HBox styleClass="HBoxStyle" style="-fx-padding: 5;">
                 <Label text="Wariant mapy: " styleClass="labelStyle"/>
                 <ComboBox fx:id="mapTypeField" promptText="Wybierz opcję" onAction="#onMapSelected">
                     <items>
@@ -35,55 +42,65 @@
                     </value>
                 </ComboBox>
             </HBox>
-            <HBox fx:id="waterAmountBox" spacing="5" alignment="CENTER" style="-fx-padding: 5" visible="false" managed="false">
-                <Label text="Ilość źródeł wody: " styleClass="labelStyle"/>
-                <Spinner fx:id="waterAmountField" styleClass="spinnerStyle" min="0" max="5" initialValue="1"/>
+            <HBox fx:id="waterHBox" styleClass="mainHBox" visible="false" managed="false">
+                <HBox fx:id="waterAmountBox" styleClass="HBoxStyle" visible="false" managed="false">
+                    <Label text="Ilość źródeł wody: " styleClass="labelStyle"/>
+                    <Spinner fx:id="waterAmountField" styleClass="spinnerStyle" min="0" max="5" initialValue="1"/>
+                </HBox>
+                <HBox fx:id="waterRangeBox" styleClass="HBoxStyle" visible="false" managed="false">
+                    <Label text="Maksymalny zasięg wody: " styleClass="labelStyle"/>
+                    <Spinner fx:id="waterRangeField" styleClass="spinnerStyle" min="0" max="100" initialValue="3"/>
+                </HBox>
             </HBox>
-            <HBox fx:id="waterRangeBox" spacing="5" alignment="CENTER" style="-fx-padding: 5" visible="false" managed="false">
-                <Label text="Maksymalny zasięg wody: " styleClass="labelStyle"/>
-                <Spinner fx:id="waterRangeField" styleClass="spinnerStyle" min="0" max="100" initialValue="3"/>
+            <HBox styleClass="mainHBox">
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Ilość roślin: " styleClass="labelStyle"/>
+                    <Spinner fx:id="plantsAmountField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                </HBox>
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Ilość zwierząt: " styleClass="labelStyle"/>
+                    <Spinner fx:id="animalsAmountField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                </HBox>
             </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Ilość roślin: " styleClass="labelStyle"/>
-                <Spinner fx:id="plantsAmountField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
-            </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Ilość zwierząt: " styleClass="labelStyle"/>
-                <Spinner fx:id="animalsAmountField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
-            </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+            <HBox styleClass="HBoxStyle" style="-fx-padding: 5">
                 <Label text="Dzienny wzrost roślin: " styleClass="labelStyle"/>
                 <Spinner fx:id="dailyPlantsGrowField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
             </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Początkowa energia: " styleClass="labelStyle"/>
-                <Spinner fx:id="startingEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            <HBox styleClass="mainHBox">
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Początkowa energia: " styleClass="labelStyle"/>
+                    <Spinner fx:id="startingEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                </HBox>
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Zysk energii z jedzenia: " styleClass="labelStyle"/>
+                    <Spinner fx:id="energyFromEatingField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                </HBox>
             </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Zysk energii z jedzenia: " styleClass="labelStyle"/>
-                <Spinner fx:id="energyFromEatingField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            <HBox styleClass="mainHBox">
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Minimalna energia do rozmnażania: " styleClass="labelStyle"/>
+                    <Spinner fx:id="reproductionMinEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                </HBox>
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Koszt rozmnażania: " styleClass="labelStyle"/>
+                    <Spinner fx:id="reproductionCostField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                </HBox>
             </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Minimalna energia do rozmnażania: " styleClass="labelStyle"/>
-                <Spinner fx:id="reproductionMinEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+            <HBox styleClass="mainHBox">
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Minimalna liczba mutacji: " styleClass="labelStyle"/>
+                    <Spinner fx:id="minMutationsField" styleClass="spinnerStyle" min="0" max="200" initialValue="10"/>
+                </HBox>
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Maksymalna liczba mutacji: " styleClass="labelStyle"/>
+                    <Spinner fx:id="maxMutationsField" styleClass="spinnerStyle" min="0" max="200" initialValue="10"/>
+                </HBox>
             </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Koszt rozmnażania: " styleClass="labelStyle"/>
-                <Spinner fx:id="reproductionCostField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
-            </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Minimalna liczba mutacji: " styleClass="labelStyle"/>
-                <Spinner fx:id="minMutationsField" styleClass="spinnerStyle" min="0" max="200" initialValue="10"/>
-            </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
-                <Label text="Maksymalna liczba mutacji: " styleClass="labelStyle"/>
-                <Spinner fx:id="maxMutationsField" styleClass="spinnerStyle" min="0" max="200" initialValue="10"/>
-            </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+            <HBox styleClass="HBoxStyle" style="-fx-padding: 5">
                 <Label text="Długość genomu: " styleClass="labelStyle"/>
                 <Spinner fx:id="genomeLengthField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
             </HBox>
-            <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5">
+            <HBox styleClass="HBoxStyle" style="-fx-padding: 5">
                 <Label text="Wariant mutacji: " styleClass="labelStyle"/>
                 <ComboBox fx:id="mutationTypeField" promptText="Wybierz opcję">
                     <items>
@@ -100,8 +117,20 @@
         </VBox>
     </top>
     <bottom>
-        <VBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
-            <Button fx:id="startButton" text="Start Simulation" onAction="#onSimulationStartClicked"/>
-        </VBox>
+        <HBox styleClass="mainHBox">
+            <HBox styleClass="HBoxStyle">
+                <Button fx:id="startButton" text="Start Simulation" onAction="#onSimulationStartClicked"/>
+            </HBox>
+            <HBox styleClass="HBoxStyle">
+                <Button fx:id="saveConfigButton" text="Save Configuration" onAction="#onSaveConfigClicked"/>
+            </HBox>
+            <HBox styleClass="HBoxStyle">
+                <Button fx:id="loadConfigButton" text="Load Configuration" onAction="#onLoadConfigClicked"/>
+            </HBox>
+        </HBox>
     </bottom>
+
+    <stylesheets>
+        <String fx:value="configurationStyle.css"/>
+    </stylesheets>
 </BorderPane>

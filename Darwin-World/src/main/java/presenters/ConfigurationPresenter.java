@@ -65,6 +65,8 @@ public class ConfigurationPresenter {
     private ComboBox<String> mutationTypeField;
 
     @FXML
+    private HBox waterHBox;
+    @FXML
     private HBox waterAmountBox;
     @FXML
     private HBox waterRangeBox;
@@ -136,16 +138,26 @@ public class ConfigurationPresenter {
         String selectedOption = mapTypeField.getValue();
 
         if(selectedOption.equals("Kula ziemska")) {
+            waterHBox.setVisible(false);
+            waterHBox.setManaged(false);
             waterAmountBox.setVisible(false);
             waterAmountBox.setManaged(false);
             waterRangeBox.setVisible(false);
             waterRangeBox.setManaged(false);
         }
         else if(selectedOption.equals("Przypływy i odpływy")) {
+            waterHBox.setVisible(true);
+            waterHBox.setManaged(true);
             waterAmountBox.setVisible(true);
             waterAmountBox.setManaged(true);
             waterRangeBox.setVisible(true);
             waterRangeBox.setManaged(true);
         }
+    }
+
+    public void onSaveConfigClicked() {
+    }
+
+    public void onLoadConfigClicked() {
     }
 }
