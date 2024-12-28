@@ -12,10 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import maps.WaterMap;
 import maps.WorldMap;
-import model.MapChangeListener;
-import model.StatisticsSaver;
-import model.TileType;
-import model.Vector2d;
+import model.*;
 import objects.Animal;
 import simulation.Simulation;
 
@@ -33,6 +30,7 @@ public class SimulationPresenter implements MapChangeListener {
     private int cellSize;
     private Simulation simulation;
     private Animal trackedAnimal;
+    private boolean isHighlightingEnabled = false;
 
     @FXML
     private GridPane mapGrid;
@@ -130,6 +128,10 @@ public class SimulationPresenter implements MapChangeListener {
     private Circle drawAnimal(Animal animal) {
         Circle circle = new Circle();
         circle.setRadius(cellSize * 0.3);
+        Genome mostPopularGenome = map.getMapStats().getMostPopularGenome();
+        if(isHighlightingEnabled && animal.getGenome().equals(mostPopularGenome)) {
+            circle.setFill(Color.VIOLET);
+        }
         return circle;
     }
 
@@ -248,5 +250,16 @@ public class SimulationPresenter implements MapChangeListener {
 
     public void onPauseClicked() {
         simulation.changeStateOfSimulation();
+    }
+
+    public void onShowMostPopularGenomeClicked() {
+        if(simulation.isRunning()) {
+            return;
+        }
+        toggleHighlighting();
+    }
+    private void toggleHighlighting() {
+        isHighlightingEnabled = !isHighlightingEnabled;
+        drawMap();
     }
 }

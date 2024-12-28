@@ -6,9 +6,8 @@ import maps.WorldMap;
 import model.MapType;
 
 public class Simulation implements Runnable {
-    private WorldMap map;
+    private final WorldMap map;
     private boolean running = true;
-
 
     public Simulation(WorldMap map, AnimalSpecification animalSpec) {
         this.map=map;
