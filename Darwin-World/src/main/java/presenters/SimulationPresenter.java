@@ -2,7 +2,6 @@ package presenters;
 
 import information.MapStatistics;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -10,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import maps.WaterMap;
 import maps.WorldMap;
 import model.*;
 import objects.Animal;
@@ -129,10 +127,18 @@ public class SimulationPresenter implements MapChangeListener {
         Circle circle = new Circle();
         circle.setRadius(cellSize * 0.3);
         Genome mostPopularGenome = map.getMapStats().getMostPopularGenome();
+        Color color = getAnimalColor(animal);
         if(isHighlightingEnabled && animal.getGenome().equals(mostPopularGenome)) {
             circle.setFill(Color.VIOLET);
+        } else {
+            circle.setFill(color);
         }
         return circle;
+    }
+
+    private Color getAnimalColor(Animal animal) {
+        int intensity = Math.min(255, Math.max(0, animal.getEnergy()*10));
+        return Color.rgb(intensity, 0, 0);
     }
 
     private void colorMap() {
