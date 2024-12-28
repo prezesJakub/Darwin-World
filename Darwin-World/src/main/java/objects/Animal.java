@@ -5,7 +5,9 @@ import model.*;
 
 import java.rmi.server.UID;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Animal implements MapElement {
     private final AnimalSpecification spec;
@@ -88,6 +90,12 @@ public class Animal implements MapElement {
     public UID getId() {
         return this.id;
     }
+    public Animal getFirstParent() {
+        return this.firstParent;
+    }
+    public Animal getSecondParent() {
+        return this.secondParent;
+    }
     public String[] getAnimalStats() {
         return new String[]{
                 String.valueOf(this.id),
@@ -103,9 +111,6 @@ public class Animal implements MapElement {
         };
     }
     public String toString() {
-        //return this.orientation.toString();
-        //return String.valueOf(this.energy);
-        //return Arrays.toString(this.genome.getGenes());
         return "Id: " + this.id.toString() + " | Energia: " + String.valueOf(this.energy);
     }
     public boolean isAt(Vector2d position) {
@@ -135,10 +140,35 @@ public class Animal implements MapElement {
         partner.consumeEnergy(spec.reproductionCost());
         this.childrenCount++;
         partner.childrenCount++;
-    /*    System.out.println(Arrays.toString(genome.getGenes()) + " " +
-                Arrays.toString(partner.genome.getGenes()) + " " + Arrays.toString(child.genome.getGenes()));*/
+        updateDescendantsCount(child);
         return child;
     }
+    private void updateDescendantsCount(Animal animal) {
+        Set<Animal> processed = new HashSet<>();
+        processed.add(animal);
+        updateDescendantsCountRecursive(animal, processed);
+    }
+
+    private void updateDescendantsCountRecursive(Animal animal, Set<Animal> processed) {
+        if(animal == null) {
+            return;
+        }
+
+        Animal parentOne = animal.getFirstParent();
+        Animal parentTwo = animal.getSecondParent();
+
+        if(parentOne != null && !processed.contains(parentOne)) {
+            parentOne.descendantsCount++;
+            processed.add(parentOne);
+            updateDescendantsCountRecursive(parentOne, processed);
+        }
+        if(parentTwo != null && !processed.contains(parentTwo)) {
+            parentTwo.descendantsCount++;
+            processed.add(parentTwo);
+            updateDescendantsCountRecursive(parentTwo, processed);
+        }
+    }
+
     public void rotate(MapDirection direction) {
         this.orientation = MapDirection.fromInt((this.orientation.toInt()+direction.toInt()) % 8);
     }
@@ -151,5 +181,17 @@ public class Animal implements MapElement {
             this.orientation = MapDirection.fromInt((this.orientation.toInt()+4) % 8);
         }
         nextDay();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(this == other) return true;
+        if(other == null || getClass() != other.getClass()) return false;
+        Animal animal = (Animal) other;
+        return id.equals(animal.id);
+    }
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
