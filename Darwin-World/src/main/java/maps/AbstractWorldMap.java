@@ -169,6 +169,7 @@ public class AbstractWorldMap implements WorldMap {
                         deadAnimalsOnField.add(animal);
                         deadAnimals.add(animal);
                         aliveAnimals.remove(animal);
+                        animal.setDeathDay(getMapStats().getDay()+1);
                     }
                 }
                 animalList.removeAll(deadAnimalsOnField);

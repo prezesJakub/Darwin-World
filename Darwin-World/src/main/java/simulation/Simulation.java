@@ -45,4 +45,8 @@ public class Simulation implements Runnable {
     public void changeStateOfSimulation() {
         running = !running;
     }
+
+    public boolean isRunning() {
+        return running;
+    }
 }

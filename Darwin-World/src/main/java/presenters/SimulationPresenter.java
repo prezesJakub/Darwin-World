@@ -32,6 +32,7 @@ public class SimulationPresenter implements MapChangeListener {
     private int mapHeight;
     private int cellSize;
     private Simulation simulation;
+    private Animal trackedAnimal;
 
     @FXML
     private GridPane mapGrid;
@@ -39,6 +40,10 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label dayStat, aliveAnimalsStat, allAnimalCountStat, plantCountStat, freeTilesStat,
             mostPopularGenomeStat, averageEnergyStat, averageLifetimeStat, averageChildrenAmountStat;
+
+    @FXML
+    private Label IDStat, positionStat, genomeStat, activeGeneStat, energyStat, plantsEatenStat,
+            childrenCountStat, descendantsCountStat, ageStat, deathDayStat;
 
     private final ExecutorService threadPool = Executors.newFixedThreadPool(4);
 
@@ -61,12 +66,12 @@ public class SimulationPresenter implements MapChangeListener {
         generateTable();
         addPlants();
         addAnimals();
-       // addWater();
         updateStats();
+        updateAnimalStats(trackedAnimal);
     }
 
     private void clearGrid() {
-        mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
+        mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0));
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
     }
@@ -106,7 +111,6 @@ public class SimulationPresenter implements MapChangeListener {
             mapGrid.add(label, x+1, mapHeight-y);
             mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
         }
-       // System.out.println(map.getAnimalPositions());
     }
 
     private void addPlants() {
@@ -129,18 +133,6 @@ public class SimulationPresenter implements MapChangeListener {
         return circle;
     }
 
-  /*  private void addWater() {
-        for(int i=0; i<mapWidth; i++) {
-            for(int j=0; j<mapHeight; j++) {
-                Vector2d pos = new Vector2d(i, j);
-                if(map.isWater(pos)) {
-                    mapGrid.add(new Label("W"), i+1, mapHeight-j);
-                    mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
-                }
-            }
-        }
-    }*/
-
     private void colorMap() {
         Map<Vector2d, TileType> tiles = map.getTiles();
 
@@ -162,9 +154,42 @@ public class SimulationPresenter implements MapChangeListener {
                     label.setBackground(new Background(new BackgroundFill(Color.SANDYBROWN, CornerRadii.EMPTY, Insets.EMPTY)));
                 }
 
+                label.setOnMouseClicked(event -> onCellClicked(pos));
+
+                if (trackedAnimal != null && trackedAnimal.getPosition().equals(pos)) {
+                    label.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+                }
+
                 mapGrid.add(label, i+1, mapHeight-j);
             }
         }
+    }
+
+    private void onCellClicked(Vector2d pos) {
+        if(simulation.isRunning()) {
+            return;
+        }
+
+        if(trackedAnimal != null && trackedAnimal.getPosition().equals(pos)) {
+            trackedAnimal = null;
+            drawMap();
+            return;
+        }
+
+        List<Animal> animals = map.getAnimal(pos);
+        if(animals.isEmpty()) {
+            return;
+        }
+        showAnimalChooser(animals);
+    }
+
+    private void showAnimalChooser(List<Animal> animals) {
+        Platform.runLater(() -> {
+            AnimalChooser.showAnimalChooser(animals, chosenAnimal -> {
+                trackedAnimal = chosenAnimal;
+                drawMap();
+            });
+        });
     }
 
     private void updateStats() {
@@ -179,6 +204,34 @@ public class SimulationPresenter implements MapChangeListener {
         averageEnergyStat.setText(String.valueOf(currentStats.getAverageEnergy()));
         averageLifetimeStat.setText(String.valueOf(currentStats.getAverageLifetime()));
         averageChildrenAmountStat.setText(String.valueOf(currentStats.getAverageChildrenAmount()));
+    }
+
+    private void updateAnimalStats(Animal animal) {
+        if(animal == null) {
+            IDStat.setText("");
+            positionStat.setText("");
+            genomeStat.setText("");
+            activeGeneStat.setText("");
+            energyStat.setText("");
+            plantsEatenStat.setText("");
+            childrenCountStat.setText("");
+            descendantsCountStat.setText("");
+            ageStat.setText("");
+            deathDayStat.setText("");
+        } else {
+            String[] currentStats = animal.getAnimalStats();
+
+            IDStat.setText(currentStats[0]);
+            positionStat.setText(currentStats[1]);
+            genomeStat.setText(currentStats[2]);
+            activeGeneStat.setText(currentStats[3]);
+            energyStat.setText(currentStats[4]);
+            plantsEatenStat.setText(currentStats[5]);
+            childrenCountStat.setText(currentStats[6]);
+            descendantsCountStat.setText(currentStats[7]);
+            ageStat.setText(currentStats[8]);
+            deathDayStat.setText(currentStats[9]);
+        }
     }
 
     public void setSimulation(Simulation simulation) {

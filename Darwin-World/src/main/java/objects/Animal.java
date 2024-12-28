@@ -16,9 +16,10 @@ public class Animal implements MapElement {
     private int childrenCount = 0;
     private int descendantsCount = 0;
     private int plantsEatenCount = 0;
+    private Integer deathDay = null;
     private Animal firstParent = null;
     private Animal secondParent = null;
-    private final UID id = new UID();
+    private final UID id;
 
     private Genome genome;
     private int activeGeneId = 0;
@@ -30,6 +31,7 @@ public class Animal implements MapElement {
         this.position = position;
         this.energy = spec.startingEnergy();
         this.genome = new Genome(spec.genomeSpec());
+        this.id=new UID();
     }
 
     public Animal(Animal parent1, Animal parent2) {
@@ -40,10 +42,15 @@ public class Animal implements MapElement {
         this.genome = new Genome(parent1, parent2);
         this.firstParent = parent1;
         this.secondParent = parent2;
+        this.id=new UID();
     }
 
     public void setPosition(Vector2d position) {
         this.position = position;
+    }
+
+    public void setDeathDay(int deathDay) {
+        this.deathDay = deathDay;
     }
 
     @Override
@@ -81,10 +88,25 @@ public class Animal implements MapElement {
     public UID getId() {
         return this.id;
     }
+    public String[] getAnimalStats() {
+        return new String[]{
+                String.valueOf(this.id),
+                String.valueOf(this.position),
+                this.genome.toString(),
+                String.valueOf(getActiveGene()),
+                String.valueOf(this.energy),
+                String.valueOf(this.plantsEatenCount),
+                String.valueOf(this.childrenCount),
+                String.valueOf(this.descendantsCount),
+                String.valueOf(this.age),
+                String.valueOf(this.deathDay)
+        };
+    }
     public String toString() {
-        return this.orientation.toString();
+        //return this.orientation.toString();
         //return String.valueOf(this.energy);
         //return Arrays.toString(this.genome.getGenes());
+        return "Id: " + this.id.toString() + " | Energia: " + String.valueOf(this.energy);
     }
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
