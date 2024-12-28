@@ -2,6 +2,7 @@ package maps;
 
 import information.AnimalSpecification;
 import information.MapSpecification;
+import information.MapStatistics;
 import model.FoodGenerator;
 import model.MapChangeListener;
 import model.MapDirection;
@@ -13,12 +14,14 @@ import java.util.*;
 
 public class AbstractWorldMap implements WorldMap {
     protected final Map<Vector2d, List<Animal>> animals = Collections.synchronizedMap(new HashMap<>());
+    protected final List<Animal> aliveAnimals = Collections.synchronizedList(new ArrayList<>());
     protected final List<Animal> deadAnimals = Collections.synchronizedList(new ArrayList<>());
     protected final Map<Vector2d, Grass> plants = Collections.synchronizedMap(new HashMap<>());
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
     private final MapSpecification mapSpec;
     private final FoodGenerator foodGenerator;
+    private final MapStatistics mapStats = new MapStatistics();
 
     public AbstractWorldMap(MapSpecification mapSpec) {
         this.mapSpec = mapSpec;
@@ -32,7 +35,6 @@ public class AbstractWorldMap implements WorldMap {
             Animal animal = new Animal(position, animalSpec);
             place(animal);
         }
-        mapChanged("Generated animals");
     }
 
     public void generatePlants(int numberOfPlants) {
@@ -41,13 +43,13 @@ public class AbstractWorldMap implements WorldMap {
             Grass grass = new Grass(position);
             plants.put(position, grass);
         }
-        mapChanged("Generated plants");
     }
 
     @Override
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
         if(canMoveTo(position)) {
+            aliveAnimals.add(animal);
             if(animals.containsKey(position)) {
                 List<Animal> animalList = animals.get(position);
                 animalList.add(animal);
@@ -56,7 +58,6 @@ public class AbstractWorldMap implements WorldMap {
                 animalList.add(animal);
                 animals.put(position, animalList);
             }
-            mapChanged("Animal placed at " + position);
         }
     }
 
@@ -92,7 +93,6 @@ public class AbstractWorldMap implements WorldMap {
                 move(animal, animal.getOrientation());
             }
         }
-        mapChanged("Moved animals");
     }
 
     private Map<Vector2d, List<Animal>> copyAnimalsMap() {
@@ -109,6 +109,7 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public void endDay() {
         generatePlants(getMapSpec().dailyPlantsGrowth());
+        mapStats.updateStats(this, aliveAnimals, deadAnimals, plants, animals);
         mapChanged("End day");
     }
 
@@ -154,6 +155,7 @@ public class AbstractWorldMap implements WorldMap {
                     if(animal.isDead()) {
                         deadAnimalsOnField.add(animal);
                         deadAnimals.add(animal);
+                        aliveAnimals.remove(animal);
                     }
                 }
                 animalList.removeAll(deadAnimalsOnField);
@@ -162,7 +164,6 @@ public class AbstractWorldMap implements WorldMap {
                 }
             }
         }
-        mapChanged("Cleaned dead bodies");
     }
 
     @Override
@@ -175,6 +176,7 @@ public class AbstractWorldMap implements WorldMap {
                 if(animal1.canReproduce() && animal2.canReproduce()) {
                     Animal child = animal1.reproduce(animal2);
                     animalList.add(child);
+                    aliveAnimals.add(child);
                 }
             }
         }
@@ -228,6 +230,11 @@ public class AbstractWorldMap implements WorldMap {
     }
 
     @Override
+    public boolean isWater(Vector2d position) {
+        return false;
+    }
+
+    @Override
     public boolean canMoveTo(Vector2d position) {
         return position.precedes(new Vector2d(mapSpec.bounds().getWidth()-1, mapSpec.bounds().getHeight()-1)) &&
                 position.follows(new Vector2d(0,0));
@@ -261,5 +268,10 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public int getDailyPlantsGrowth() {
         return this.mapSpec.dailyPlantsGrowth();
+    }
+
+    @Override
+    public MapStatistics getMapStats() {
+        return this.mapStats;
     }
 }

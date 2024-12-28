@@ -3,6 +3,7 @@ package model;
 import information.GenomeSpecification;
 import objects.Animal;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -56,32 +57,74 @@ public class Genome {
     }
 
     private void mutate(Genome genome) {
-        if(genome.genomeSpec.mutationType() == 0) {
+        if(genome.genomeSpec.mutationType() == MutationType.COMPLETE_RANDOMNESS) {
             randomMutation(genome);
+        }
+        else if(genome.genomeSpec.mutationType() == MutationType.SLIGHT_CORRECTION) {
+            slightCorrection(genome);
         }
     }
 
     private void randomMutation(Genome genome) {
         Random random = new Random();
-        int maxMutations = Math.min(genome.genomeSpec.maxMutations(), genome.length);
-        int minMutations = Math.min(genome.genomeSpec.minMutations(), maxMutations);
-
-        int mutationCount = random.nextInt(maxMutations-minMutations+1) + minMutations;
-        Set<Integer> mutationPositions = new HashSet<>();
-        while (mutationPositions.size() < mutationCount) {
-            int position = random.nextInt(genome.length);
-            mutationPositions.add(position);
-        }
+        Set<Integer> mutationPositions = selectMutationPositions(genome);
 
         for(int position : mutationPositions) {
             int newValue = random.nextInt(8);
             genome.getGenes()[position] = newValue;
         }
     }
+
+    private void slightCorrection(Genome genome) {
+        Random random = new Random();
+        Set<Integer> mutationPositions = selectMutationPositions(genome);
+
+        for(int position : mutationPositions) {
+            int actualValue = genome.getGenes()[position];
+            int newValue = random.nextBoolean() ? (actualValue+1+8)%8 : (actualValue-1+8)%8;
+            genome.getGenes()[position] = newValue;
+        }
+    }
+
+    private Set<Integer> selectMutationPositions(Genome genome) {
+        Random random = new Random();
+        int maxMutations = Math.min(genome.genomeSpec.maxMutations(), genome.length);
+        int minMutations = Math.min(genome.genomeSpec.minMutations(), maxMutations);
+
+        int mutationCount = random.nextInt(maxMutations-minMutations+1) + minMutations;
+        Set<Integer> mutationPositions = new HashSet<>();
+
+        while (mutationPositions.size() < mutationCount) {
+            int position = random.nextInt(genome.length);
+            mutationPositions.add(position);
+        }
+        return mutationPositions;
+    }
+
     public int getLength() {
         return this.length;
     }
     public int[] getGenes() {
         return this.genes;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(genes);
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
+        }
+        if(obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Genome other = (Genome) obj;
+        return Arrays.equals(this.genes, other.genes);
+    }
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(this.genes);
     }
 }

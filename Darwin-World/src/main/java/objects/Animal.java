@@ -113,6 +113,8 @@ public class Animal implements MapElement {
         partner.consumeEnergy(spec.reproductionCost());
         this.childrenCount++;
         partner.childrenCount++;
+    /*    System.out.println(Arrays.toString(genome.getGenes()) + " " +
+                Arrays.toString(partner.genome.getGenes()) + " " + Arrays.toString(child.genome.getGenes()));*/
         return child;
     }
     public void rotate(MapDirection direction) {
@@ -128,6 +130,4 @@ public class Animal implements MapElement {
         }
         nextDay();
     }
-
-    //to do
 }

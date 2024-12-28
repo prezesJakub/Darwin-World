@@ -1,0 +1,12 @@
+.mainHBox {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-padding: 5;
+}
+.HBoxStyle {
+    -fx-spacing: 5;
+    -fx-alignment: center;
+}
+.configNameStyle {
+    -fx-min-width: 200px;
+}

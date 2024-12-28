@@ -1,0 +1,9 @@
+.statsTable {
+    -fx-padding: 10 0 10 20;
+    -fx-margin: 10;
+    -fx-grid-lines-visible: true;
+    -fx-alignment: center;
+}
+.statsTable .label {
+    -fx-padding: 5;
+}

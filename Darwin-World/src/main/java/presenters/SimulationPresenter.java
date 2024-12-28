@@ -1,5 +1,6 @@
 package presenters;
 
+import information.MapStatistics;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,8 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import maps.WaterMap;
 import maps.WorldMap;
 import model.MapChangeListener;
+import model.StatisticsSaver;
 import model.Vector2d;
 import simulation.Simulation;
 
@@ -28,6 +31,10 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private GridPane mapGrid;
+
+    @FXML
+    private Label dayStat, aliveAnimalsStat, allAnimalCountStat, plantCountStat, freeTilesStat,
+            mostPopularGenomeStat, averageEnergyStat, averageLifetimeStat, averageChildrenAmountStat;
 
     private final ExecutorService threadPool = Executors.newFixedThreadPool(4);
 
@@ -50,6 +57,8 @@ public class SimulationPresenter implements MapChangeListener {
         generateTable();
         addPlants();
         addAnimals();
+        addWater();
+        updateStats();
     }
 
     private void clearGrid() {
@@ -100,6 +109,32 @@ public class SimulationPresenter implements MapChangeListener {
             mapGrid.add(new Label(map.getPlant(pos).toString()), x+1, mapHeight-y);
             mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
         }
+    }
+
+    private void addWater() {
+        for(int i=0; i<mapWidth; i++) {
+            for(int j=0; j<mapHeight; j++) {
+                Vector2d pos = new Vector2d(i, j);
+                if(map.isWater(pos)) {
+                    mapGrid.add(new Label("W"), i+1, mapHeight-j);
+                    mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
+                }
+            }
+        }
+    }
+
+    private void updateStats() {
+        MapStatistics currentStats = map.getMapStats();
+
+        dayStat.setText(String.valueOf(currentStats.getDay()));
+        aliveAnimalsStat.setText(String.valueOf(currentStats.getAliveAnimals()));
+        allAnimalCountStat.setText(String.valueOf(currentStats.getAllAnimalCount()));
+        plantCountStat.setText(String.valueOf(currentStats.getPlantCount()));
+        freeTilesStat.setText(String.valueOf(currentStats.getFreeTiles()));
+        mostPopularGenomeStat.setText(currentStats.getMostPopularGenomeDetails());
+        averageEnergyStat.setText(String.valueOf(currentStats.getAverageEnergy()));
+        averageLifetimeStat.setText(String.valueOf(currentStats.getAverageLifetime()));
+        averageChildrenAmountStat.setText(String.valueOf(currentStats.getAverageChildrenAmount()));
     }
 
     public void setSimulation(Simulation simulation) {

@@ -2,6 +2,7 @@ package maps;
 
 import information.AnimalSpecification;
 import information.MapSpecification;
+import information.MapStatistics;
 import model.*;
 import objects.Animal;
 import objects.Grass;
@@ -28,6 +29,7 @@ public interface WorldMap extends MoveValidator {
     UUID getId();
     List<Vector2d> getAnimalPositions();
     List<Vector2d> getPlantPositions();
+    boolean isWater(Vector2d position);
     boolean canMoveTo(Vector2d position);
     MapSpecification getMapSpec();
     int getWidth();
@@ -35,4 +37,5 @@ public interface WorldMap extends MoveValidator {
     int getStartingPlantsAmount();
     int getStartingAnimalsAmount();
     int getDailyPlantsGrowth();
+    MapStatistics getMapStats();
 }
