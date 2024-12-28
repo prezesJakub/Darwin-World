@@ -3,10 +3,7 @@ package maps;
 import information.AnimalSpecification;
 import information.MapSpecification;
 import information.MapStatistics;
-import model.FoodGenerator;
-import model.MapChangeListener;
-import model.MapDirection;
-import model.Vector2d;
+import model.*;
 import objects.Animal;
 import objects.Grass;
 
@@ -17,6 +14,7 @@ public class AbstractWorldMap implements WorldMap {
     protected final List<Animal> aliveAnimals = Collections.synchronizedList(new ArrayList<>());
     protected final List<Animal> deadAnimals = Collections.synchronizedList(new ArrayList<>());
     protected final Map<Vector2d, Grass> plants = Collections.synchronizedMap(new HashMap<>());
+    protected final Map<Vector2d, TileType> tiles = Collections.synchronizedMap(new HashMap<>());
     protected final List<MapChangeListener> observers = new ArrayList<>();
     private final UUID id = UUID.randomUUID();
     private final MapSpecification mapSpec;
@@ -42,6 +40,21 @@ public class AbstractWorldMap implements WorldMap {
         for(Vector2d position : plantPositions) {
             Grass grass = new Grass(position);
             plants.put(position, grass);
+        }
+    }
+
+    @Override
+    public void generateTiles() {
+        for(int i=0; i<getWidth(); i++) {
+            for(int j=0; j<getHeight(); j++) {
+                Vector2d position = new Vector2d(i, j);
+
+                if(mapSpec.bounds().isEquator(position)) {
+                    tiles.put(position, TileType.EQUATOR);
+                } else {
+                    tiles.put(position, TileType.NORMAL);
+                }
+            }
         }
     }
 
@@ -227,6 +240,11 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public List<Vector2d> getPlantPositions() {
         return new ArrayList<>(plants.keySet());
+    }
+
+    @Override
+    public Map<Vector2d, TileType> getTiles() {
+        return this.tiles;
     }
 
     @Override

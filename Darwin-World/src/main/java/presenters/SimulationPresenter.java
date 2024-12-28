@@ -5,18 +5,22 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import maps.WaterMap;
 import maps.WorldMap;
 import model.MapChangeListener;
 import model.StatisticsSaver;
+import model.TileType;
 import model.Vector2d;
+import objects.Animal;
 import simulation.Simulation;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -57,7 +61,7 @@ public class SimulationPresenter implements MapChangeListener {
         generateTable();
         addPlants();
         addAnimals();
-        addWater();
+       // addWater();
         updateStats();
     }
 
@@ -88,14 +92,18 @@ public class SimulationPresenter implements MapChangeListener {
             mapGrid.getRowConstraints().add(new RowConstraints(cellSize));
             mapGrid.add(label2, 0, i+1);
         }
+        colorMap();
     }
 
     private void addAnimals() {
         List<Vector2d> animalPositions = map.getAnimalPositions();
         for(Vector2d pos : animalPositions) {
+            Label label = new Label();
             int x = pos.getX();
             int y = pos.getY();
-            mapGrid.add(new Label(map.getAnimal(pos).toString()), x+1, mapHeight-y);
+            Animal animal = map.getAnimal(pos).getFirst();
+            label.setGraphic(drawAnimal(animal));
+            mapGrid.add(label, x+1, mapHeight-y);
             mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
         }
        // System.out.println(map.getAnimalPositions());
@@ -104,14 +112,24 @@ public class SimulationPresenter implements MapChangeListener {
     private void addPlants() {
         List<Vector2d> plantPositions = map.getPlantPositions();
         for(Vector2d pos : plantPositions) {
+            Label label = new Label();
             int x = pos.getX();
             int y = pos.getY();
-            mapGrid.add(new Label(map.getPlant(pos).toString()), x+1, mapHeight-y);
-            mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
+            label.setText(map.getPlant(pos).toString());
+            label.setTextFill(Color.GREENYELLOW);
+            label.setStyle("-fx-alignment: CENTER; -fx-font-weight: bold; -fx-font-size: " + (cellSize * 0.7) + "px;");
+            mapGrid.add(label, x+1, mapHeight-y);
+            mapGrid.setHalignment(label, HPos.CENTER);
         }
     }
 
-    private void addWater() {
+    private Circle drawAnimal(Animal animal) {
+        Circle circle = new Circle();
+        circle.setRadius(cellSize * 0.3);
+        return circle;
+    }
+
+  /*  private void addWater() {
         for(int i=0; i<mapWidth; i++) {
             for(int j=0; j<mapHeight; j++) {
                 Vector2d pos = new Vector2d(i, j);
@@ -119,6 +137,32 @@ public class SimulationPresenter implements MapChangeListener {
                     mapGrid.add(new Label("W"), i+1, mapHeight-j);
                     mapGrid.setHalignment(mapGrid.getChildren().get(mapGrid.getChildren().size() - 1), HPos.CENTER);
                 }
+            }
+        }
+    }*/
+
+    private void colorMap() {
+        Map<Vector2d, TileType> tiles = map.getTiles();
+
+        for(int i=0; i<mapWidth; i++) {
+            for(int j=mapHeight-1; j>=0; j--) {
+                Vector2d pos = new Vector2d(i, j);
+                TileType tile = tiles.get(pos);
+                Label label = new Label();
+                label.setMinSize(cellSize, cellSize);
+                label.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.DOTTED, null, new BorderWidths(0.4))));
+                label.setStyle("-fx-alignment: CENTER;");
+
+                if(map.isWater(pos)) {
+                    label.setBackground(new Background(new BackgroundFill(Color.DARKBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+                else if(tile == TileType.EQUATOR) {
+                    label.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+                } else {
+                    label.setBackground(new Background(new BackgroundFill(Color.SANDYBROWN, CornerRadii.EMPTY, Insets.EMPTY)));
+                }
+
+                mapGrid.add(label, i+1, mapHeight-j);
             }
         }
     }

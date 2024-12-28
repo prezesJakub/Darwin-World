@@ -14,6 +14,7 @@ public class Simulation implements Runnable {
         this.map=map;
         map.generateAnimals(map.getMapSpec().startingAnimalsAmount(), animalSpec);
         map.generatePlants(map.getMapSpec().startingPlantsAmount());
+        map.generateTiles();
 
         if(map instanceof WaterMap waterMap) {
             waterMap.generateWater(waterMap.getWaterSpec().waterAmount(), waterMap.getWaterSpec().maxRange());

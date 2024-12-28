@@ -52,6 +52,41 @@
                         </GridPane>
                     </HBox>
 
+                    <HBox>
+                        <GridPane styleClass="statsTable">
+                            <Label text="ID" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <Label fx:id="IDStat" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                            <Label text="Pozycja" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <Label fx:id="positionStat" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Genom" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <Label fx:id="genomeStat" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <Label text="Aktywny gen" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                            <Label fx:id="activeGeneStat" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                            <Label text="Energia" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                            <Label fx:id="energyStat" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                            <Label text="Zjedzone rośliny" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                            <Label fx:id="plantsEatenStat" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                            <Label text="Ilość dzieci" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                            <Label fx:id="childrenCountStat" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                            <Label text="Ilość potomków" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                            <Label fx:id="descendantsCountStat" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                            <Label text="Wiek" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                            <Label fx:id="ageStat" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+
+                            <Label text="Dzień śmierci" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                            <Label fx:id="deathDayStat" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+
+                        </GridPane>
+                    </HBox>
+
                     <VBox style="-fx-padding: 10 0 10 0;"/>
 
                     <HBox alignment="CENTER">

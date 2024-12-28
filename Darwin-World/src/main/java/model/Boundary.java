@@ -25,4 +25,7 @@ public class Boundary {
     public int getLowerEquatorBound() {
         return this.lowerEquatorBound;
     }
+    public boolean isEquator(Vector2d pos) {
+        return pos.getY()>=this.lowerEquatorBound && pos.getY()<=this.upperEquatorBound;
+    }
 }

@@ -4,6 +4,7 @@ import information.MapSpecification;
 import information.WaterSpecification;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
+import model.TileType;
 import model.Vector2d;
 import objects.Animal;
 import objects.Water;
@@ -40,6 +41,21 @@ public class WaterMap extends AbstractWorldMap {
         for(Vector2d position : waterPositions) {
             Water water = new Water(position, maxRange);
             waterMap.put(position, water);
+        }
+    }
+
+    @Override
+    public void generateTiles() {
+        for(int i=0; i<getWidth(); i++) {
+            for(int j=0; j<getHeight(); j++) {
+                Vector2d position = new Vector2d(i, j);
+
+                if(this.getMapSpec().bounds().isEquator(position)) {
+                    tiles.put(position, TileType.EQUATOR);
+                } else {
+                    tiles.put(position, TileType.NORMAL);
+                }
+            }
         }
     }
 
