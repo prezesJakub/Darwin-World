@@ -131,7 +131,7 @@ public class SimulationPresenter implements MapChangeListener {
         allAnimalCountStat.setText(String.valueOf(currentStats.getAllAnimalCount()));
         plantCountStat.setText(String.valueOf(currentStats.getPlantCount()));
         freeTilesStat.setText(String.valueOf(currentStats.getFreeTiles()));
-        mostPopularGenomeStat.setText(String.valueOf(currentStats.getMostPopularGenome()));
+        mostPopularGenomeStat.setText(currentStats.getMostPopularGenomeDetails());
         averageEnergyStat.setText(String.valueOf(currentStats.getAverageEnergy()));
         averageLifetimeStat.setText(String.valueOf(currentStats.getAverageLifetime()));
         averageChildrenAmountStat.setText(String.valueOf(currentStats.getAverageChildrenAmount()));

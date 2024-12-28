@@ -3,6 +3,7 @@ package model;
 import information.GenomeSpecification;
 import objects.Animal;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -105,5 +106,25 @@ public class Genome {
     }
     public int[] getGenes() {
         return this.genes;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(genes);
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
+        }
+        if(obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Genome other = (Genome) obj;
+        return Arrays.equals(this.genes, other.genes);
+    }
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(this.genes);
     }
 }

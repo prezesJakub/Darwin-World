@@ -2,10 +2,10 @@ package information;
 
 import maps.WorldMap;
 import model.Genome;
+import model.GenomeSearcher;
 import model.Vector2d;
 import objects.Animal;
 import objects.Grass;
-import objects.Water;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +16,9 @@ public class MapStatistics {
     private int allAnimalCount;
     private int plantCount;
     private int freeTiles;
+    private String mostPopularGenomeDetails;
     private Genome mostPopularGenome = null;
+    private int mostPopularGenomeCount = 0;
     private double averageEnergy;
     private double averageLifetime;
     private double averageChildrenAmount;
@@ -27,6 +29,7 @@ public class MapStatistics {
         countAnimals(animals, deadAnimals);
         countPlants(plants);
         countFreeTiles(map, plants, animalMap);
+        calculateMostPopularGenome(animals);
         calculateAverageEnergy(animals);
         calculateAverageLifetime(deadAnimals);
         calculateAverageChildrenAmount(animals);
@@ -52,6 +55,12 @@ public class MapStatistics {
                 }
             }
         }
+    }
+    private void calculateMostPopularGenome(List<Animal> animals) {
+        GenomeSearcher.calculateMostPopularGenome(animals);
+        mostPopularGenome = GenomeSearcher.getBestGenome();
+        mostPopularGenomeCount = GenomeSearcher.getMaxCount();
+        mostPopularGenomeDetails = mostPopularGenome.toString() + " x" + String.valueOf(mostPopularGenomeCount);
     }
     private void calculateAverageEnergy(List<Animal> animals) {
         int energySum = 0;
@@ -99,7 +108,7 @@ public class MapStatistics {
                 String.valueOf(allAnimalCount),
                 String.valueOf(plantCount),
                 String.valueOf(freeTiles),
-                String.valueOf(mostPopularGenome),
+                mostPopularGenomeDetails,
                 String.valueOf(averageEnergy),
                 String.valueOf(averageLifetime),
                 String.valueOf(averageChildrenAmount)
@@ -122,6 +131,9 @@ public class MapStatistics {
     }
     public Genome getMostPopularGenome() {
         return this.mostPopularGenome;
+    }
+    public String getMostPopularGenomeDetails() {
+        return this.mostPopularGenomeDetails;
     }
     public double getAverageEnergy() {
         return this.averageEnergy;
