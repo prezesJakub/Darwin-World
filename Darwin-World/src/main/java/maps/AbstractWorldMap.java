@@ -35,7 +35,6 @@ public class AbstractWorldMap implements WorldMap {
             Animal animal = new Animal(position, animalSpec);
             place(animal);
         }
-        mapChanged("Generated animals");
     }
 
     public void generatePlants(int numberOfPlants) {
@@ -44,7 +43,6 @@ public class AbstractWorldMap implements WorldMap {
             Grass grass = new Grass(position);
             plants.put(position, grass);
         }
-        mapChanged("Generated plants");
     }
 
     @Override
@@ -60,7 +58,6 @@ public class AbstractWorldMap implements WorldMap {
                 animalList.add(animal);
                 animals.put(position, animalList);
             }
-            mapChanged("Animal placed at " + position);
         }
     }
 
@@ -96,7 +93,6 @@ public class AbstractWorldMap implements WorldMap {
                 move(animal, animal.getOrientation());
             }
         }
-        mapChanged("Moved animals");
     }
 
     private Map<Vector2d, List<Animal>> copyAnimalsMap() {
@@ -168,7 +164,6 @@ public class AbstractWorldMap implements WorldMap {
                 }
             }
         }
-        mapChanged("Cleaned dead bodies");
     }
 
     @Override

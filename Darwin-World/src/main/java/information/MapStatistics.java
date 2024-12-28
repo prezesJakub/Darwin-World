@@ -92,6 +92,19 @@ public class MapStatistics {
         averageChildrenAmount /= 100;
     }
 
+    public String[] getStatsTable() {
+        return new String[]{
+                String.valueOf(day),
+                String.valueOf(aliveAnimals),
+                String.valueOf(allAnimalCount),
+                String.valueOf(plantCount),
+                String.valueOf(freeTiles),
+                String.valueOf(mostPopularGenome),
+                String.valueOf(averageEnergy),
+                String.valueOf(averageLifetime),
+                String.valueOf(averageChildrenAmount)
+        };
+    }
     public int getDay() {
         return this.day;
     }

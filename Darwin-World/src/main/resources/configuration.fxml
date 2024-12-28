@@ -114,6 +114,12 @@
                     </value>
                 </ComboBox>
             </HBox>
+            <HBox styleClass="mainHBox">
+                <HBox styleClass="HBoxStyle">
+                    <Label text="Eksportuj statystyki do CSV: " styleClass="labelStyle"/>
+                    <CheckBox fx:id="exportStatsToCSVField"/>
+                </HBox>
+            </HBox>
         </VBox>
     </top>
     <bottom>

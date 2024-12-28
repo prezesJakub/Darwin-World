@@ -12,6 +12,7 @@ import javafx.scene.layout.RowConstraints;
 import maps.WaterMap;
 import maps.WorldMap;
 import model.MapChangeListener;
+import model.StatisticsSaver;
 import model.Vector2d;
 import simulation.Simulation;
 

@@ -7,10 +7,7 @@ import information.WaterSpecification;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -20,7 +17,6 @@ import maps.WorldMap;
 import model.*;
 import simulation.Simulation;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -63,6 +59,8 @@ public class ConfigurationPresenter {
     private Spinner<Integer> genomeLengthField;
     @FXML
     private ComboBox<String> mutationTypeField;
+    @FXML
+    private CheckBox exportStatsToCSVField;
 
     @FXML
     private HBox waterHBox;
@@ -118,6 +116,9 @@ public class ConfigurationPresenter {
         SimulationPresenter presenter = loader.getController();
         WorldMap map = configureMap();
         presenter.setWorldMap(map);
+        if(exportStatsToCSVField.isSelected()) {
+            map.addObserver(new StatisticsSaver(map));
+        }
         Simulation simulation = new Simulation(map, configureAnimal());
         presenter.setSimulation(simulation);
 
@@ -175,7 +176,8 @@ public class ConfigurationPresenter {
                     String.valueOf(minMutationsField.getValue()),
                     String.valueOf(maxMutationsField.getValue()),
                     String.valueOf(genomeLengthField.getValue()),
-                    mutationTypeField.getValue()
+                    mutationTypeField.getValue(),
+                    String.valueOf(exportStatsToCSVField.isSelected())
             };
             config = new Configuration(configTable);
 
@@ -241,5 +243,6 @@ public class ConfigurationPresenter {
         maxMutationsField.getValueFactory().setValue(Integer.parseInt(configTable[14]));
         genomeLengthField.getValueFactory().setValue(Integer.parseInt(configTable[15]));
         mutationTypeField.setValue(configTable[16]);
+        exportStatsToCSVField.setSelected(Boolean.parseBoolean(configTable[17]));
     }
 }

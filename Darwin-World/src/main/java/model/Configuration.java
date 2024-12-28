@@ -20,6 +20,7 @@ public class Configuration {
     private final int maxMutations;
     private final int genomeLength;
     private final String mutationType;
+    private final boolean exportStatsToCSV;
 
     public Configuration(String[] configTable) {
         this.configName = configTable[0];
@@ -39,6 +40,7 @@ public class Configuration {
         this.maxMutations = Integer.parseInt(configTable[14]);
         this.genomeLength = Integer.parseInt(configTable[15]);
         this.mutationType = configTable[16];
+        this.exportStatsToCSV = Boolean.parseBoolean(configTable[17]);
     }
     public String[] getConfigTable() {
         return new String[]{
@@ -58,7 +60,8 @@ public class Configuration {
               String.valueOf(minMutations),
               String.valueOf(maxMutations),
               String.valueOf(genomeLength),
-              mutationType
+              mutationType,
+              String.valueOf(exportStatsToCSV)
         };
     }
 
