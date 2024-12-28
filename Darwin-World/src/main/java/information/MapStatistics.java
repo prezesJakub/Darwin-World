@@ -57,6 +57,12 @@ public class MapStatistics {
         }
     }
     private void calculateMostPopularGenome(List<Animal> animals) {
+        if (animals.isEmpty()) {
+            mostPopularGenome = null;
+            mostPopularGenomeCount = 0;
+            mostPopularGenomeDetails = "null";
+            return;
+        }
         GenomeSearcher.calculateMostPopularGenome(animals);
         mostPopularGenome = GenomeSearcher.getBestGenome();
         mostPopularGenomeCount = GenomeSearcher.getMaxCount();
@@ -65,6 +71,10 @@ public class MapStatistics {
     private void calculateAverageEnergy(List<Animal> animals) {
         int energySum = 0;
         int animalCount = animals.size();
+        if(animalCount == 0) {
+            averageEnergy = 0;
+            return;
+        }
 
         for(Animal animal : animals) {
             energySum += animal.getEnergy();
@@ -78,6 +88,10 @@ public class MapStatistics {
     private void calculateAverageLifetime(List<Animal> deadAnimals) {
         int lifetimeSum = 0;
         int animalCount = deadAnimals.size();
+        if(animalCount == 0) {
+            averageLifetime = 0;
+            return;
+        }
 
         for(Animal animal : deadAnimals) {
             lifetimeSum += animal.getAge();
@@ -91,7 +105,10 @@ public class MapStatistics {
     private void calculateAverageChildrenAmount(List<Animal> animals) {
         int childrenAmountSum = 0;
         int animalCount = animals.size();
-
+        if(animalCount == 0) {
+            averageChildrenAmount = 0;
+            return;
+        }
         for(Animal animal : animals) {
             childrenAmountSum += animal.getChildrenCount();
         }

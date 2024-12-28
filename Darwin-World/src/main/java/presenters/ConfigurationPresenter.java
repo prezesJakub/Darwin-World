@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ConfigurationPresenter {
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(4);
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(8);
 
     @FXML
     private TextField configNameField;

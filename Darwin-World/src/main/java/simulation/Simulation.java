@@ -6,14 +6,14 @@ import maps.WorldMap;
 import model.MapType;
 
 public class Simulation implements Runnable {
-    private WorldMap map;
+    private final WorldMap map;
     private boolean running = true;
-
 
     public Simulation(WorldMap map, AnimalSpecification animalSpec) {
         this.map=map;
         map.generateAnimals(map.getMapSpec().startingAnimalsAmount(), animalSpec);
         map.generatePlants(map.getMapSpec().startingPlantsAmount());
+        map.generateTiles();
 
         if(map instanceof WaterMap waterMap) {
             waterMap.generateWater(waterMap.getWaterSpec().waterAmount(), waterMap.getWaterSpec().maxRange());
@@ -43,5 +43,9 @@ public class Simulation implements Runnable {
 
     public void changeStateOfSimulation() {
         running = !running;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

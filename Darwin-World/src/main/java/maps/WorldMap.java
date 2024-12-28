@@ -8,11 +8,13 @@ import objects.Animal;
 import objects.Grass;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface WorldMap extends MoveValidator {
     void generateAnimals(int numberOfAnimals, AnimalSpecification animalSpec);
     void generatePlants(int numberOfPlants);
+    void generateTiles();
     void place(Animal animal);
     void move(Animal animal, MapDirection direction);
     void moveAnimals();
@@ -29,6 +31,7 @@ public interface WorldMap extends MoveValidator {
     UUID getId();
     List<Vector2d> getAnimalPositions();
     List<Vector2d> getPlantPositions();
+    Map<Vector2d, TileType> getTiles();
     boolean isWater(Vector2d position);
     boolean canMoveTo(Vector2d position);
     MapSpecification getMapSpec();
