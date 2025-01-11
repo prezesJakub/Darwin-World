@@ -77,7 +77,6 @@ public class AbstractWorldMap implements WorldMap {
     @Override
     public void move(Animal animal, MapDirection direction) {
         Vector2d oldPosition = animal.getPosition();
-   //     System.out.println(animal.getActiveGene() + " " + animal.getPosition());
         animal.move(direction, this);
         List<Animal> animalList = animals.get(oldPosition);
         animalList.remove(animal);

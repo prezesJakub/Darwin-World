@@ -21,11 +21,11 @@
             <HBox styleClass="mainHBox">
                 <HBox styleClass="HBoxStyle">
                     <Label text="Szerokość mapy: " styleClass="labelStyle"/>
-                    <Spinner fx:id="mapWidthField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                    <Spinner fx:id="mapWidthField" styleClass="spinnerStyle" min="1" max="50" initialValue="10"/>
                 </HBox>
                 <HBox styleClass="HBoxStyle">
                     <Label text="Wysokość mapy: " styleClass="labelStyle"/>
-                    <Spinner fx:id="mapHeightField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                    <Spinner fx:id="mapHeightField" styleClass="spinnerStyle" min="1" max="50" initialValue="10"/>
                 </HBox>
             </HBox>
             <HBox styleClass="HBoxStyle" style="-fx-padding: 5;">
@@ -49,7 +49,7 @@
                 </HBox>
                 <HBox fx:id="waterRangeBox" styleClass="HBoxStyle" visible="false" managed="false">
                     <Label text="Maksymalny zasięg wody: " styleClass="labelStyle"/>
-                    <Spinner fx:id="waterRangeField" styleClass="spinnerStyle" min="0" max="100" initialValue="3"/>
+                    <Spinner fx:id="waterRangeField" styleClass="spinnerStyle" min="0" max="50" initialValue="3"/>
                 </HBox>
             </HBox>
             <HBox styleClass="mainHBox">
@@ -69,7 +69,7 @@
             <HBox styleClass="mainHBox">
                 <HBox styleClass="HBoxStyle">
                     <Label text="Początkowa energia: " styleClass="labelStyle"/>
-                    <Spinner fx:id="startingEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                    <Spinner fx:id="startingEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="20"/>
                 </HBox>
                 <HBox styleClass="HBoxStyle">
                     <Label text="Zysk energii z jedzenia: " styleClass="labelStyle"/>
@@ -79,7 +79,7 @@
             <HBox styleClass="mainHBox">
                 <HBox styleClass="HBoxStyle">
                     <Label text="Minimalna energia do rozmnażania: " styleClass="labelStyle"/>
-                    <Spinner fx:id="reproductionMinEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                    <Spinner fx:id="reproductionMinEnergyField" styleClass="spinnerStyle" min="1" max="200" initialValue="20"/>
                 </HBox>
                 <HBox styleClass="HBoxStyle">
                     <Label text="Koszt rozmnażania: " styleClass="labelStyle"/>
@@ -89,16 +89,16 @@
             <HBox styleClass="mainHBox">
                 <HBox styleClass="HBoxStyle">
                     <Label text="Minimalna liczba mutacji: " styleClass="labelStyle"/>
-                    <Spinner fx:id="minMutationsField" styleClass="spinnerStyle" min="0" max="200" initialValue="10"/>
+                    <Spinner fx:id="minMutationsField" styleClass="spinnerStyle" min="0" max="50" initialValue="1"/>
                 </HBox>
                 <HBox styleClass="HBoxStyle">
                     <Label text="Maksymalna liczba mutacji: " styleClass="labelStyle"/>
-                    <Spinner fx:id="maxMutationsField" styleClass="spinnerStyle" min="0" max="200" initialValue="10"/>
+                    <Spinner fx:id="maxMutationsField" styleClass="spinnerStyle" min="0" max="50" initialValue="8"/>
                 </HBox>
             </HBox>
             <HBox styleClass="HBoxStyle" style="-fx-padding: 5">
                 <Label text="Długość genomu: " styleClass="labelStyle"/>
-                <Spinner fx:id="genomeLengthField" styleClass="spinnerStyle" min="1" max="200" initialValue="10"/>
+                <Spinner fx:id="genomeLengthField" styleClass="spinnerStyle" min="1" max="50" initialValue="8"/>
             </HBox>
             <HBox styleClass="HBoxStyle" style="-fx-padding: 5">
                 <Label text="Wariant mutacji: " styleClass="labelStyle"/>
